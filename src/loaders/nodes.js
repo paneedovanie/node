@@ -9,6 +9,8 @@ class Nodes {
     const node = new Node({ host, port, ref })
 
     this.list.push(node)
+
+    return node
   }
 
   size() {

@@ -6,6 +6,7 @@ module.exports = () => {
   const wss = new Server({ server });
 
   wss.on('connection', function connection(ws, request, client) {
+    console.log(wss.clients.size)
     ws.send(messageSending({
       action: 'CONFIG',
       data: bcConfig
@@ -22,7 +23,10 @@ module.exports = () => {
 };
 
 const onMessageHandler = async function (message) {
-  let block = null
+  let
+    block = null,
+    node = null
+
   const { action, data } = messageReceiving(message)
 
   switch (action) {
@@ -62,6 +66,22 @@ const onMessageHandler = async function (message) {
 
       nodes.sendAll(message)
       nodes.add(message.data)
+
+      break
+    case 'NEW_NODE':
+      node = nodes.add(message.data)
+
+      node.sendMessage({
+        action: 'OLD_NODE',
+        data: {
+          host: this.host,
+          port: this.port
+        }
+      })
+
+      break
+    case 'OLD_NODE':
+      node = nodes.add(message.data)
 
       break
   }
