@@ -3,11 +3,12 @@ const
   { messageSending, messageReceiving } = require('../helpers/ws.helper')
 
 module.exports = class {
-  constructor({ host = '', port = 5000 }) {
+  constructor({ host = '', port = 5000, ref = false }) {
+    this.ref = ref
     this.model = new WebSocket(`ws://${host}:${port}`)
 
-    this.model.on('open', () => this.onOpenHandler)
-    this.model.on('message', this.onMessageHandler)
+    this.model.on('open', this.onOpenHandler.bind(this))
+    this.model.on('message', this.onMessageHandler.bind(this))
     this.model.on('close', this.onCloseHandler)
   }
 
@@ -16,14 +17,41 @@ module.exports = class {
   }
 
   onOpenHandler() {
-    console.log('open')
+    if (!this.ref) return
+    this.sendMessage({
+      action: 'NEW_PEER',
+      data: {
+        host: 'localhost',
+        port: config.port,
+        lastBlock: bc.storageLastBlock
+      }
+    })
+    // this.sendMessage({ action: 'REQUEST_NEXT_BLOCK', data: bc.storageLastBlock })
   }
 
-  onMessageHandler() {
+  onMessageHandler(message) {
+    const { action, data } = messageReceiving(message)
 
+    switch (action) {
+      case 'CONFIG':
+        bcConfig = data
+
+        break
+      case 'REQUESTED_NEXT_BLOCK':
+        const last = bc.lastBlock()
+
+        if (!data) return bc.status = 'validated'
+
+        if (last && data.prevHash !== last.hash) return
+
+        bc.addBlock(data)
+        this.sendMessage({ action: 'REQUEST_NEXT_BLOCK', data: data })
+
+        break
+      case 'VALIDATED_NODE':
+        nodes.add()
+    }
   }
 
-  onCloseHandler() {
-
-  }
+  onCloseHandler() { }
 }
