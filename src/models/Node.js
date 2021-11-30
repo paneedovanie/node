@@ -9,16 +9,14 @@ module.exports = class {
     this.model.on('open', () => this.onOpenHandler)
     this.model.on('message', this.onMessageHandler)
     this.model.on('close', this.onCloseHandler)
-
-    return this.model
   }
 
-  sendMessage() {
+  sendMessage(message) {
     this.model.send(messageSending(message))
   }
 
   onOpenHandler() {
-
+    console.log('open')
   }
 
   onMessageHandler() {
