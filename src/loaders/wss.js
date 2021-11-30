@@ -60,7 +60,8 @@ const onMessageHandler = async function (message) {
         action: 'NEW_NODE',
         data: {
           host: this.host,
-          port: this.port
+          port: this.port,
+          type: 'new'
         }
       }
 
@@ -69,15 +70,7 @@ const onMessageHandler = async function (message) {
 
       break
     case 'NEW_NODE':
-      node = await nodes.add(data)
-
-      node.sendMessage({
-        action: 'OLD_NODE',
-        data: {
-          host: this.host,
-          port: this.port
-        }
-      })
+      node = nodes.add(data)
 
       break
     case 'OLD_NODE':

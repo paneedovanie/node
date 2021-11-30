@@ -27,7 +27,7 @@ module.exports = async () => {
   const nodes = new Nodes()
 
   if (config.hasRef)
-    nodes.add({ host: config.refHost, port: config.refPort, ref: true })
+    nodes.add({ host: config.refHost, port: config.refPort, type: 'ref' })
 
   return nodes
 }
