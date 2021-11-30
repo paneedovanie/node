@@ -56,7 +56,7 @@ const onMessageHandler = async function (message) {
       break
 
     case 'VALIDATED_NODE':
-      const message = {
+      const tempMessage = {
         action: 'NEW_NODE',
         data: {
           host: this.host,
@@ -64,12 +64,12 @@ const onMessageHandler = async function (message) {
         }
       }
 
-      nodes.sendAll(message)
-      nodes.add(message.data)
+      nodes.sendAll(tempMessage)
+      nodes.add(tempMessage.data)
 
       break
     case 'NEW_NODE':
-      node = nodes.add(message.data)
+      node = nodes.add(data)
 
       node.sendMessage({
         action: 'OLD_NODE',
@@ -81,7 +81,7 @@ const onMessageHandler = async function (message) {
 
       break
     case 'OLD_NODE':
-      node = nodes.add(message.data)
+      node = nodes.add(data)
 
       break
   }
