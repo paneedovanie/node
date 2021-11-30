@@ -29,6 +29,8 @@ const onMessageHandler = async function (message) {
 
   const { action, data } = messageReceiving(message)
 
+  console.log(action, data)
+
   switch (action) {
     case 'NEW_PEER':
       this.host = data.host
@@ -64,6 +66,8 @@ const onMessageHandler = async function (message) {
           type: 'new'
         }
       }
+
+      console.log(tempMessage)
 
       nodes.sendAll(tempMessage)
       nodes.add(tempMessage.data)

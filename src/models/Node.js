@@ -4,6 +4,7 @@ const
 
 module.exports = class {
   constructor({ host = '', port = 5000, type = null }) {
+    console.log(host, port, type)
     this.type = type
     this.model = new WebSocket(`ws://${host}:${port}`)
 
@@ -29,7 +30,7 @@ module.exports = class {
         })
         break
       case 'new':
-        node.sendMessage({
+        this.sendMessage({
           action: 'OLD_NODE',
           data: {
             host: config.host,
