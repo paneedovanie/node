@@ -2,6 +2,7 @@ const
   fs = require('fs'),
   readline = require('readline'),
   config = require('../config'),
+  bcConfig = require('../config/bc'),
   Block = require('./Block'),
   Transaction = require('./Transaction'),
   { EventEmitter } = require('events'),
@@ -138,7 +139,7 @@ module.exports = class extends EventEmitter {
     setTimeout(() => {
       this.addBlock(this.generateBlock())
       events.emit('bc-BLOCK_CREATED')
-    }, config.blockTime)
+    }, bcConfig.blockTime)
   }
 
   balance(publicKey) {
@@ -177,6 +178,37 @@ module.exports = class extends EventEmitter {
       lineReader.on('close', () => {
         balance.coin = precisionRoundMod(balance.coin, 16)
         res(balance)
+      });
+    })
+  }
+
+  valAndNxtBlk(data) {
+    return new Promise((res, rej) => {
+      let result = null
+      let currBlock = data ? new Block(data) : null
+
+      if (currBlock && !currBlock.isValid()) rej('Invalid Block')
+
+      const lineReader = readline.createInterface({
+        input: fs.createReadStream(this.path)
+      });
+
+      lineReader.on('line', (strBlock) => {
+        let block = new Block(JSON.parse(strBlock))
+
+        if (!data) {
+          result = block
+          lineReader.close()
+        }
+
+        else if (currBlock.hash === block.prevHash) {
+          result = block
+          lineReader.close()
+        }
+      });
+
+      lineReader.on('close', () => {
+        res(result)
       });
     })
   }
