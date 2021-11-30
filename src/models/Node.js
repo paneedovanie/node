@@ -18,7 +18,6 @@ module.exports = class {
   }
 
   onOpenHandler() {
-    console.log(this.type)
     switch (this.type) {
       case 'ref':
         this.sendMessage({
