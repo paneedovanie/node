@@ -67,10 +67,8 @@ const onMessageHandler = async function (message) {
         }
       }
 
-      console.log(tempMessage)
-
       nodes.sendAll(tempMessage)
-      nodes.add(tempMessage.data)
+      // nodes.add(tempMessage.data)
 
       break
     case 'NEW_NODE':
