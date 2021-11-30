@@ -4,7 +4,7 @@ const
 
 module.exports = class {
   constructor({ index = null, hash = null, transactions = null, merkelRoot = 0, reward = 0, prevHash = null, txHeight = 0, creator = null, timestamp = null }) {
-    this.version = config.version
+    this.version = bcConfig.version
     this.index = index || this.generateIndex()
     this.transactions = transactions
     this.txHeight = txHeight
