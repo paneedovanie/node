@@ -4,7 +4,6 @@ const
 
 module.exports = class {
   constructor({ host = '', port = 5000, type = null }) {
-    this.ref = ref
     this.type = type
     this.model = new WebSocket(`ws://${host}:${port}`)
 
