@@ -38,11 +38,7 @@ module.exports = class {
 
         break
       case 'REQUESTED_NEXT_BLOCK':
-        const last = bc.lastBlock()
-
         if (!data) return bc.status = 'validated'
-
-        if (last && data.prevHash !== last.hash) return
 
         bc.addBlock(data)
         this.sendMessage({ action: 'REQUEST_NEXT_BLOCK', data: data })

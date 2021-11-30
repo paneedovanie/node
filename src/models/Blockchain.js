@@ -116,7 +116,7 @@ module.exports = class extends EventEmitter {
       block = new Block(data),
       last = bc.lastBlock()
 
-    if (!block.isValid() || block.prevHash !== last.hash) return
+    if (!block.isValid() || (last && block.prevHash !== last.hash)) return
 
     this.chain.push(block)
 
