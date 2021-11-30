@@ -27,8 +27,14 @@ module.exports = class extends EventEmitter {
       let prevBlock = null
       this.status = 'validating'
 
-      if (!fs.existsSync(this.path))
-        fs.writeFileSync(this.path, "");
+      if (!fs.existsSync(this.path)) {
+
+        fs.mkdir('store', { recursive: true }, (err) => {
+          if (err) return cb(err);
+        })
+
+        fs.writeFileSync(this.path, "")
+      }
 
       const lineReader = readline.createInterface({
         input: fs.createReadStream(this.path)
