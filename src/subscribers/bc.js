@@ -3,9 +3,14 @@ module.exports = class {
     this.suffix = 'bc-'
   }
 
-  BLOCK_CREATED() {
-    if (!nodes.size())
-      bc.setAsCreator()
+  BLOCK_CREATED(block) {
+    nodes.sendAll({
+      action: 'ADD_BLOCK',
+      data: block
+    })
+
+    // if (!nodes.size())
+    bc.setAsCreator()
   }
 
   VALID_FORGER() {
