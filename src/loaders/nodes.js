@@ -5,7 +5,9 @@ class Nodes {
     this.list = []
   }
 
-  add(node) {
+  add({ host = null, port = 5000, ref = false }) {
+    const node = new Node({ host, port, ref })
+
     this.list.push(node)
   }
 
@@ -17,11 +19,8 @@ class Nodes {
 module.exports = async () => {
   const nodes = new Nodes()
 
-  if (config.hasRef) {
-    const node = new Node({ host: config.refHost, port: config.refPort, ref: true })
-
+  if (config.hasRef)
     nodes.add(node)
-  }
 
   return nodes
 }

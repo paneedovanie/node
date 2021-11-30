@@ -18,13 +18,25 @@ module.exports = class {
 
   onOpenHandler() {
     if (!this.ref) return
-    this.sendMessage({ action: 'REQUEST_NEXT_BLOCK', data: bc.storageLastBlock })
+    this.sendMessage({
+      action: 'NEW_PEER',
+      data: {
+        host: 'localhost',
+        port: config.port,
+        lastBlock: bc.storageLastBlock
+      }
+    })
+    // this.sendMessage({ action: 'REQUEST_NEXT_BLOCK', data: bc.storageLastBlock })
   }
 
   onMessageHandler(message) {
     const { action, data } = messageReceiving(message)
 
     switch (action) {
+      case 'CONFIG':
+        bcConfig = data
+
+        break
       case 'REQUESTED_NEXT_BLOCK':
         const last = bc.lastBlock()
 
@@ -34,6 +46,10 @@ module.exports = class {
 
         bc.addBlock(data)
         this.sendMessage({ action: 'REQUEST_NEXT_BLOCK', data: data })
+
+        break
+      case 'VALIDATED_NODE':
+        nodes.add()
     }
   }
 

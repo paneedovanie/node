@@ -29,8 +29,6 @@ const onMessageHandler = async function (message) {
     case 'REQUEST_NEXT_BLOCK':
       const block = await bc.valAndNxtBlk(data)
 
-      console.log(block)
-
       this.send(messageSending({
         action: 'REQUESTED_NEXT_BLOCK',
         data: block

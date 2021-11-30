@@ -7,4 +7,8 @@ module.exports = class {
     if (!nodes.size())
       bc.setAsCreator()
   }
+
+  VALID_FORGER() {
+
+  }
 }
