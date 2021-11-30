@@ -15,14 +15,10 @@ class Nodes {
 }
 
 module.exports = async () => {
-  const nodes = new Nodes(config.hasRef)
+  const nodes = new Nodes()
 
   if (config.hasRef) {
-    const node = new Node({ host: config.refHost, port: config.refPort })
-
-    node.onOpenHandler = () => {
-      node.sendMessage({ action: 'REQUEST_BLOCK', data: bc.lastBlock() })
-    }
+    const node = new Node({ host: config.refHost, port: config.refPort, ref: true })
 
     nodes.add(node)
   }

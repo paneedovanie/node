@@ -15,6 +15,8 @@ module.exports = class extends EventEmitter {
     this.status = 'inactive'
     this.create = false
 
+    this.storageLastBlock = null
+
     this.config = config
 
     this.chain = []
@@ -34,29 +36,37 @@ module.exports = class extends EventEmitter {
         })
 
         fs.writeFileSync(this.path, "")
-      }
 
-      const lineReader = readline.createInterface({
-        input: fs.createReadStream(this.path)
-      });
-
-      lineReader.on('line', (strBlock) => {
-        let block = new Block(JSON.parse(strBlock))
-
-        if (!block.isValid() || block.prevHash ? block.prevHash !== prevBlock.hash : false)
-          rej('Invalid Block')
-
-        delete block.transactions
-        this.chain.push(block)
-
-        prevBlock = block
-      });
-
-      lineReader.on('close', async () => {
         this.status = 'validated'
-        await bc.generateGenesisBlock()
         res(true)
-      });
+      } else {
+        const lineReader = readline.createInterface({
+          input: fs.createReadStream(this.path)
+        });
+
+        lineReader.on('line', (strBlock) => {
+          if (!strBlock || strBlock === '') return
+          let block = new Block(JSON.parse(strBlock))
+
+          if (!block.isValid() || block.prevHash ? block.prevHash !== prevBlock.hash : false)
+            rej('Invalid Block')
+
+          this.storageLastBlock = { ...block }
+
+          delete block.transactions
+          this.chain.push(block)
+
+          prevBlock = block
+        });
+
+        lineReader.on('close', async () => {
+          if (!config.hasRef) {
+            this.status = 'validated'
+            await bc.generateGenesisBlock()
+          }
+          res(true)
+        });
+      }
     })
   }
 
@@ -103,7 +113,7 @@ module.exports = class extends EventEmitter {
   async addBlock(data) {
     const block = new Block(data)
 
-    if (!await block.isValid()) return
+    if (!block.isValid()) return
 
     this.chain.push(block)
 
