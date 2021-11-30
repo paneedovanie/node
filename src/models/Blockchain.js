@@ -102,9 +102,11 @@ module.exports = class extends EventEmitter {
   }
 
   async addBlock(data) {
-    const block = new Block(data)
+    const
+      block = new Block(data),
+      last = bc.lastBlock()
 
-    if (!await block.isValid()) return
+    if (!await block.isValid() || block.prevHash !== last.hash) return
 
     this.chain.push(block)
 

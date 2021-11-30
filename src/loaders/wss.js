@@ -23,18 +23,30 @@ module.exports = () => {
 };
 
 const onMessageHandler = async function (message) {
+  let block = null
   const { action, data } = messageReceiving(message)
 
   switch (action) {
-    case 'REQUEST_NEXT_BLOCK':
-      const block = await bc.valAndNxtBlk(data)
+    case 'NEW_PEER':
+      this.host = data.host
+      this.port = data.port
 
-      console.log(block)
+      block = await bc.valAndNxtBlk(data.lastBlock)
 
       this.send(messageSending({
         action: 'REQUESTED_NEXT_BLOCK',
         data: block
       }))
+
+      break
+    case 'REQUEST_NEXT_BLOCK':
+      block = await bc.valAndNxtBlk(data)
+
+      this.send(messageSending({
+        action: 'REQUESTED_NEXT_BLOCK',
+        data: block
+      }))
+      break
   }
 
   // events.emit(`ws-message_${message.action}`, message.data, this)
