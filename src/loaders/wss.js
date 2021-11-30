@@ -69,7 +69,7 @@ const onMessageHandler = async function (message) {
 
       break
     case 'NEW_NODE':
-      node = nodes.add(data)
+      node = await nodes.add(data)
 
       node.sendMessage({
         action: 'OLD_NODE',
