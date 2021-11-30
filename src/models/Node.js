@@ -9,7 +9,7 @@ module.exports = class {
 
     this.model.on('open', this.onOpenHandler.bind(this))
     this.model.on('message', this.onMessageHandler.bind(this))
-    this.model.on('close', this.onCloseHandler)
+    this.model.on('close', this.onCloseHandler.bind(this))
   }
 
   sendMessage(message) {

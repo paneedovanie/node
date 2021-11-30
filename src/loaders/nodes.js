@@ -14,6 +14,11 @@ class Nodes {
   size() {
     return this.list.length
   }
+
+  sendAll(message) {
+    for (const node of this.list)
+      node.sendMessage(message)
+  }
 }
 
 module.exports = async () => {

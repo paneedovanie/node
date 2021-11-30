@@ -50,6 +50,20 @@ const onMessageHandler = async function (message) {
     case 'ADD_BLOCK':
       bc.addBlock(data)
       break
+
+    case 'VALIDATED_NODE':
+      const message = {
+        action: 'NEW_NODE',
+        data: {
+          host: this.host,
+          port: this.port
+        }
+      }
+
+      nodes.sendAll(message)
+      nodes.add(message.data)
+
+      break
   }
 
   // events.emit(`ws-message_${message.action}`, message.data, this)
