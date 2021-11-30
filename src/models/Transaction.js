@@ -1,5 +1,6 @@
 const
-  Encryption = require('../helpers/encryption.helper')
+  Encryption = require('../helpers/encryption.helper'),
+  { precisionRoundMod } = require('../helpers/number.helper')
 
 module.exports = class {
   constructor({ txId = null, to = null, from = null, data = null, fee = null, timestamp = null, hash = null, signature = null }) {
@@ -14,15 +15,15 @@ module.exports = class {
   }
 
   generateFee() {
-    if (this.data) {
+    if (this.data && this.from) {
       let byteLen = 0
       if (this.data.coin)
-        byteLen += this.data.coin.value.toString().length
+        byteLen += this.data.coin.toString().length
 
       if (this.data.custom)
         byteLen += JSON.stringify(this.data.custom).length
 
-      return byteLen * 0.0001
+      return precisionRoundMod(byteLen * 0.0001, 16)
     } else
       return 0
   }
@@ -41,9 +42,9 @@ module.exports = class {
   }
 
   isValid() {
-    // if (this.from)
-    //   return Encryption.verify(this.signature, this.generateHash(), this.from)
-    // else
-    return this.hash === this.generateHash()
+    if (this.txId !== 0 || !this.from)
+      return Encryption.verify(this.signature, this.generateHash(), this.from)
+    else
+      return this.hash === this.generateHash()
   }
 }

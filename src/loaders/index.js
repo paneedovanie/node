@@ -18,12 +18,11 @@ module.exports = async () => {
   global.wss = await wssLoader()
   console.log("Websocket Initialized")
 
-  global.nodes = await nodesLoader()
-
   global.bc = new Blockchain
   await bc.init()
-
   bc.setAsCreator()
+
+  global.nodes = await nodesLoader()
 
   subscribersLoader()
 }

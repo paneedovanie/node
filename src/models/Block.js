@@ -1,14 +1,17 @@
 const
-  Encryption = require('../helpers/encryption.helper')
+  Encryption = require('../helpers/encryption.helper'),
+  { precisionRoundMod } = require('../helpers/number.helper')
 
 module.exports = class {
-  constructor({ index = null, hash = null, transactions = null, merkelRoot = 0, reward = 0, prevHash = null, txHeight = 0, timestamp = null }) {
+  constructor({ index = null, hash = null, transactions = null, merkelRoot = 0, reward = 0, prevHash = null, txHeight = 0, creator = null, timestamp = null }) {
+    this.version = config.version
     this.index = index || this.generateIndex()
     this.transactions = transactions
     this.txHeight = txHeight
     this.reward = reward
     this.merkelRoot = merkelRoot || this.generateMerkleRoot()
     this.timestamp = timestamp || Date.now()
+    this.creator = creator
     this.prevHash = prevHash
     this.hash = hash || this.generateHash()
   }
@@ -46,10 +49,10 @@ module.exports = class {
       for (let i = 0; i < merkleList.length; i++) {
         let item = merkleList[i]
 
-        if (!level) {
+        if (!level && !item.txId) {
           item.txId = txId
           txId++
-          reward += item.fee
+          reward += precisionRoundMod(item.fee, 16)
           this.reward = reward
         }
 

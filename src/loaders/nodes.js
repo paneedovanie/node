@@ -17,8 +17,11 @@ class Nodes {
 module.exports = async () => {
   const nodes = new Nodes
 
-  if (config.hasRef)
-    nodes.add(new Node({ host: config.refHost, port: config.refPort }))
+  if (config.hasRef) {
+    const node = new Node({ host: config.refHost, port: config.refPort })
+    node.sendMessage({ action: 'REQUEST_BLOCK', data: bc.getLastBlock() })
+    nodes.add(node)
+  }
 
   return nodes
 }

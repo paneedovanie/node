@@ -78,12 +78,12 @@ module.exports = class Encryption {
     return decrypted;
   }
 
-  static async generateKeys() {
+  static async generateKeys(buff = 'hex') {
     const
       privateKey = ed.utils.randomPrivateKey(),
       publicKey = await ed.getPublicKey(privateKey)
 
-    return { privateKey: Buffer.from(privateKey).toString('hex'), publicKey: Buffer.from(publicKey).toString('hex') }
+    return { privateKey: Buffer.from(privateKey).toString(buff), publicKey: Buffer.from(publicKey).toString(buff) }
   }
 
   static getPublicKey(privateKey) {

@@ -4,7 +4,8 @@ const
   config = require('../config'),
   Block = require('./Block'),
   Transaction = require('./Transaction'),
-  { EventEmitter } = require('events')
+  { EventEmitter } = require('events'),
+  { precisionRoundMod } = require('../helpers/number.helper')
 
 module.exports = class extends EventEmitter {
   constructor(num = 0) {
@@ -23,6 +24,7 @@ module.exports = class extends EventEmitter {
 
   init() {
     return new Promise((res, rej) => {
+      let prevBlock = null
       this.status = 'validating'
 
       if (!fs.existsSync(this.path))
@@ -35,15 +37,18 @@ module.exports = class extends EventEmitter {
       lineReader.on('line', (strBlock) => {
         let block = new Block(JSON.parse(strBlock))
 
-        if (!block.isValid())
+        if (!block.isValid() || block.prevHash ? block.prevHash !== prevBlock.hash : false)
           rej('Invalid Block')
 
         delete block.transactions
         this.chain.push(block)
+
+        prevBlock = block
       });
 
-      lineReader.on('close', () => {
+      lineReader.on('close', async () => {
         this.status = 'validated'
+        await bc.generateGenesisBlock()
         res(true)
       });
     })
@@ -58,14 +63,18 @@ module.exports = class extends EventEmitter {
     return this.chain[n - 1]
   }
 
-  generateGenesisBlock() {
-    const block = new Block({ index: 0 })
-    this.addBlock(block)
+  async generateGenesisBlock() {
+    if (this.chain.length) return
+    const tx = new Transaction({ txId: 0, to: '3169856db82b60fb4ae1090025ff2e48f8b93e7e43843ab261b467ae290b476b', data: { coin: 100_000_000_000 } })
+    this.transactions = [tx]
+    this.addBlock(await this.generateBlock())
   }
 
   generateBlock() {
     const last = this.lastBlock(),
       transactions = this.transactions
+
+    transactions.concat(this.transactions)
 
     this.transactions = []
 
@@ -74,12 +83,15 @@ module.exports = class extends EventEmitter {
       txHeight = 0
 
     if (last) {
+      if (last.reward > 0)
+        transactions.unshift(new Transaction({ to: last.creator, data: { coin: last.reward } }))
+
       index = last.index + 1
       prevHash = last.hash
       txHeight = last.txHeight + transactions.length
     }
 
-    return new Block({ index, prevHash, transactions, txHeight })
+    return new Block({ index, prevHash, transactions, txHeight, creator: config.key })
   }
 
   async addBlock(data) {
@@ -93,18 +105,25 @@ module.exports = class extends EventEmitter {
     fs.appendFileSync(this.path, strBlock);
   }
 
-  generateTransaction({ from = null, to = null, data = null }) {
+  async generateTransaction({ from = null, to = null, data = null }) {
     return new Transaction({ from, to, data })
   }
 
   async addTransaction(data) {
-    const transaction = new Transaction(data)
+    const
+      balance = await this.balance(data.from),
+      transaction = new Transaction(data)
 
-    if (!await transaction.isValid()) return false
+    let total = transaction.data.coin + transaction.fee
+
+    for (const tx of this.transactions)
+      if (tx.from === transaction.from) return { status: 'error', message: 'Pending transaction' }
+    if (balance.coin < total) return { status: 'error', message: 'Insufficient Funds' }
+    if (!await transaction.isValid()) return { status: 'error', message: 'Pending transaction' }
 
     this.transactions.push(transaction)
 
-    return true
+    return { status: 'success' }
   }
 
   setAsCreator() {
@@ -114,5 +133,45 @@ module.exports = class extends EventEmitter {
       this.addBlock(this.generateBlock())
       events.emit('bc-BLOCK_CREATED')
     }, config.blockTime)
+  }
+
+  balance(publicKey) {
+    return new Promise((res, rej) => {
+      let balance = {
+        coin: 0
+      }
+
+      if (!fs.existsSync(this.path))
+        fs.writeFileSync(this.path, "");
+
+      const lineReader = readline.createInterface({
+        input: fs.createReadStream(this.path)
+      });
+
+      lineReader.on('line', (strBlock) => {
+        let block = new Block(JSON.parse(strBlock))
+
+        for (const tx of block.transactions) {
+          if (!tx.data || publicKey !== tx.from && publicKey !== tx.to)
+            continue
+
+          if (tx.data.coin) {
+            if (!balance.coin) balance.coin = 0
+
+            if (tx.from === publicKey)
+              balance.coin -= tx.data.coin + tx.fee
+            if (tx.to === publicKey)
+              balance.coin += tx.data.coin
+
+            balance.coin = precisionRoundMod(balance.coin, 16)
+          }
+        }
+      });
+
+      lineReader.on('close', () => {
+        balance.coin = precisionRoundMod(balance.coin, 16)
+        res(balance)
+      });
+    })
   }
 }
