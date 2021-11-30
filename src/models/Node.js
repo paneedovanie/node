@@ -38,14 +38,16 @@ module.exports = class {
 
         break
       case 'REQUESTED_NEXT_BLOCK':
-        if (!data) return bc.status = 'validated'
+        if (!data) {
+          bc.status = 'validated'
+          this.sendMessage({ action: 'VALIDATED_NODE' })
+          return
+        }
 
         bc.addBlock(data)
         this.sendMessage({ action: 'REQUEST_NEXT_BLOCK', data: data })
 
         break
-      case 'VALIDATED_NODE':
-        nodes.add()
     }
   }
 

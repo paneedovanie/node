@@ -6,7 +6,6 @@ module.exports = () => {
   const wss = new Server({ server });
 
   wss.on('connection', function connection(ws, request, client) {
-
     ws.send(messageSending({
       action: 'CONFIG',
       data: bcConfig
@@ -46,6 +45,10 @@ const onMessageHandler = async function (message) {
         action: 'REQUESTED_NEXT_BLOCK',
         data: block
       }))
+      break
+
+    case 'ADD_BLOCK':
+      bc.addBlock(data)
       break
   }
 
