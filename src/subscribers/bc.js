@@ -1,5 +1,3 @@
-const nodes = require("../loaders/nodes")
-
 module.exports = class {
   constructor() {
     this.suffix = 'bc-'
