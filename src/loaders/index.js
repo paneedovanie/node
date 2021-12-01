@@ -20,7 +20,6 @@ module.exports = async () => {
 
   global.bc = new Blockchain
   await bc.init()
-  bc.setAsCreator()
 
   global.nodes = await nodesLoader()
 
