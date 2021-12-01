@@ -71,6 +71,13 @@ const onMessageHandler = async function (message) {
     case 'NEW_NODE':
       nodes.add(data)
       break
+
+    case 'OLD_NODE':
+      this.host = data.host
+      this.port = data.port
+
+      nodes.addExisting(this)
+      break
   }
 
   // events.emit(`ws-message_${message.action}`, message.data, this)
