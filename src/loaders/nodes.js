@@ -25,6 +25,12 @@ class Nodes {
     for (const node of this.list)
       node.sendMessage(message)
   }
+
+  getRandom() {
+    const index = Math.floor(Math.random() * (this.size - 0) + 0)
+
+    return this.list[index]
+  }
 }
 
 module.exports = async () => {

@@ -78,6 +78,12 @@ const onMessageHandler = async function (message) {
 
       nodes.addExisting(this)
       break
+
+    case 'SET_AS_CREATOR':
+      bc.setAsCreator()
+      break
+
+
   }
 
   // events.emit(`ws-message_${message.action}`, message.data, this)

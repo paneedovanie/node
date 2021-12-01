@@ -70,6 +70,10 @@ module.exports = class {
       case 'NEW_NODE':
         nodes.add(data)
         break
+
+      case 'SET_AS_CREATOR':
+        bc.setAsCreator()
+        break
     }
   }
 

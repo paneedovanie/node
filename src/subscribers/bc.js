@@ -1,3 +1,5 @@
+const nodes = require("../loaders/nodes")
+
 module.exports = class {
   constructor() {
     this.suffix = 'bc-'
@@ -9,8 +11,12 @@ module.exports = class {
       data: block
     })
 
-    // if (!nodes.size())
-    bc.setAsCreator()
+    if (!nodes.size())
+      bc.setAsCreator()
+    else
+      nodes.getRandom().sendMessage({
+        action: 'SET_AS_CREATOR'
+      })
   }
 
   VALID_FORGER() {
