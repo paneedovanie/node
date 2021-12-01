@@ -3,10 +3,9 @@ const
   { messageSending, messageReceiving } = require('../helpers/ws.helper')
 
 module.exports = class {
-  constructor({ host = '', port = 5000, type = null }) {
-    console.log(host, port, type)
+  constructor({ host = '', port = 5000, type = null, model = null }) {
     this.type = type
-    this.model = new WebSocket(`ws://${host}:${port}`)
+    this.model = model || new WebSocket(`ws://${host}:${port}`)
 
     this.model.on('open', this.onOpenHandler.bind(this))
     this.model.on('message', this.onMessageHandler.bind(this))

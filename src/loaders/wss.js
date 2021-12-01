@@ -1,6 +1,6 @@
 const
   { Server } = require("ws"),
-  { messageSending, messageReceiving } = require('../helpers/ws.helper')
+  { messageSending, messageReceiving } = require('../helpers/ws.helper');
 
 module.exports = () => {
   const wss = new Server({ server });
@@ -28,8 +28,6 @@ const onMessageHandler = async function (message) {
     node = null
 
   const { action, data } = messageReceiving(message)
-
-  console.log(action, data)
 
   switch (action) {
     case 'NEW_PEER':
@@ -67,7 +65,8 @@ const onMessageHandler = async function (message) {
         }
       }
 
-      nodes.sendAll(tempMessage)
+      nodes.addExisting(this)
+      // nodes.sendAll(tempMessage)
       // nodes.add(tempMessage.data)
 
       break

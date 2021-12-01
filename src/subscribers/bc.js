@@ -4,6 +4,7 @@ module.exports = class {
   }
 
   BLOCK_CREATED(block) {
+    console.log('block')
     nodes.sendAll({
       action: 'ADD_BLOCK',
       data: block

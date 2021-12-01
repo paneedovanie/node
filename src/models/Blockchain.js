@@ -63,7 +63,6 @@ module.exports = class extends EventEmitter {
         lineReader.on('close', async () => {
           if (!config.hasRef) {
             this.status = 'validated'
-            await bc.generateGenesisBlock()
           }
           res(true)
         });
@@ -212,9 +211,7 @@ module.exports = class extends EventEmitter {
         if (!data) {
           result = block
           lineReader.close()
-        }
-
-        else if (currBlock.hash === block.prevHash) {
+        } else if (currBlock.hash === block.prevHash) {
           result = block
           lineReader.close()
         }

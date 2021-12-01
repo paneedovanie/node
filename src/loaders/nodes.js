@@ -13,13 +13,23 @@ class Nodes {
     return node
   }
 
+  async addExisting(model) {
+    const node = await new Node({ model: model })
+
+    this.list.push(node)
+
+    return node
+  }
+
   size() {
     return this.list.length
   }
 
   sendAll(message) {
-    for (const node of this.list)
+    for (const node of this.list) {
+      console.log(node)
       node.sendMessage(message)
+    }
   }
 }
 
