@@ -147,12 +147,14 @@ module.exports = class extends EventEmitter {
   setAsCreator() {
     this.create = true
 
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       this.create = false
 
       const block = this.generateBlock()
       this.addBlock(block)
       events.emit('bc-BLOCK_CREATED', block)
+
+      clearTimeout(timer)
     }, bcConfig.blockTime)
   }
 
