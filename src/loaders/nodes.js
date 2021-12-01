@@ -5,8 +5,8 @@ class Nodes {
     this.list = []
   }
 
-  async add({ host = null, port = 5000, type = null }) {
-    const node = await new Node({ host, port, type })
+  async add({ host = null, port = 5000, type = null, confirm = false }) {
+    const node = await new Node({ host, port, type, confirm })
 
     this.list.push(node)
   }

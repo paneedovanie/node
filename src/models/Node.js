@@ -6,6 +6,8 @@ module.exports = class {
   constructor({ host = '', port = 5000, type = null, model = null }) {
     this.type = type
     this.model = model || new WebSocket(`ws://${host}:${port}`)
+    this.model.host = host
+    this.model.port = port
 
     this.model.on('open', this.onOpenHandler.bind(this))
     this.model.on('message', this.onMessageHandler.bind(this))
@@ -47,8 +49,8 @@ module.exports = class {
     switch (action) {
       case 'CONFIG':
         bcConfig = data
-        break
 
+        break
       case 'REQUESTED_NEXT_BLOCK':
         if (!data) {
           bc.status = 'validated'
@@ -58,6 +60,7 @@ module.exports = class {
 
         bc.addBlock(data)
         this.sendMessage({ action: 'REQUEST_NEXT_BLOCK', data: data })
+
         break
 
       case 'ADD_BLOCK':
@@ -66,12 +69,19 @@ module.exports = class {
 
       case 'NEW_NODE':
         nodes.add(data)
-        console.log(data)
+        break
+
+      case 'OLD_NODE':
+        this.host = data.host
+        this.port = data.port
+
+        nodes.addExisting(this)
         break
     }
   }
 
   onCloseHandler() {
     console.log('close')
+
   }
 }
