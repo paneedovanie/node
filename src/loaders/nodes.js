@@ -9,16 +9,12 @@ class Nodes {
     const node = await new Node({ host, port, type })
 
     this.list.push(node)
-
-    return node
   }
 
   async addExisting(model) {
     const node = await new Node({ model: model })
 
     this.list.push(node)
-
-    return node
   }
 
   size() {
@@ -26,19 +22,16 @@ class Nodes {
   }
 
   sendAll(message) {
-    for (const node of this.list) {
-      console.log(node)
+    for (const node of this.list)
       node.sendMessage(message)
-    }
   }
 }
 
 module.exports = async () => {
   const nodes = new Nodes()
 
-  if (config.hasRef) {
+  if (config.hasRef)
     nodes.add({ host: config.refHost, port: config.refPort, type: 'ref' })
-  }
 
   return nodes
 }

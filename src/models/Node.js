@@ -70,5 +70,7 @@ module.exports = class {
     }
   }
 
-  onCloseHandler() { }
+  onCloseHandler() {
+    console.log('close')
+  }
 }
