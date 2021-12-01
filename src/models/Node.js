@@ -60,6 +60,13 @@ module.exports = class {
         this.sendMessage({ action: 'REQUEST_NEXT_BLOCK', data: data })
 
         break
+
+      case 'ADD_BLOCK':
+        console.log(data)
+        bc.addBlock(data)
+        break
+      default:
+        console.log(messageReceiving(message))
     }
   }
 
