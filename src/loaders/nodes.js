@@ -42,7 +42,7 @@ module.exports = async () => {
   setInterval(() => {
     console.log('status', bc.create)
     console.log('nodes', nodes.size())
-  }, 1000)
+  }, 100)
 
   return nodes
 }
