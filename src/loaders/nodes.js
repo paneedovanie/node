@@ -33,5 +33,9 @@ module.exports = async () => {
   if (config.hasRef)
     nodes.add({ host: config.refHost, port: config.refPort, type: 'ref' })
 
+  setInterval(() => {
+    console.log(nodes.size())
+  }, 1000)
+
   return nodes
 }

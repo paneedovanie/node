@@ -50,7 +50,7 @@ const onMessageHandler = async function (message) {
       break
 
     case 'VALIDATED_NODE':
-      ws.send(messageSending({
+      this.send(messageSending({
         action: 'CONFIG',
         data: bcConfig
       }))
