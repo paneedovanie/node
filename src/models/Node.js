@@ -66,6 +66,7 @@ module.exports = class {
 
       case 'NEW_NODE':
         nodes.add(data)
+        console.log(data)
         break
     }
   }
