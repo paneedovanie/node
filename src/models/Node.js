@@ -47,8 +47,8 @@ module.exports = class {
     switch (action) {
       case 'CONFIG':
         bcConfig = data
-
         break
+
       case 'REQUESTED_NEXT_BLOCK':
         if (!data) {
           bc.status = 'validated'
@@ -58,15 +58,15 @@ module.exports = class {
 
         bc.addBlock(data)
         this.sendMessage({ action: 'REQUEST_NEXT_BLOCK', data: data })
-
         break
 
       case 'ADD_BLOCK':
-        console.log(data)
         bc.addBlock(data)
         break
-      default:
-        console.log(messageReceiving(message))
+
+      case 'NEW_NODE':
+        nodes.add(data)
+        break
     }
   }
 

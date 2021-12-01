@@ -40,8 +40,8 @@ const onMessageHandler = async function (message) {
         action: 'REQUESTED_NEXT_BLOCK',
         data: block
       }))
-
       break
+
     case 'REQUEST_NEXT_BLOCK':
       block = await bc.valAndNxtBlk(data)
 
@@ -65,17 +65,12 @@ const onMessageHandler = async function (message) {
         }
       }
 
+      nodes.sendAll(tempMessage)
       nodes.addExisting(this)
-      // nodes.sendAll(tempMessage)
-      // nodes.add(tempMessage.data)
-
       break
+
     case 'NEW_NODE':
-      node = nodes.add(data)
-
-      break
-    case 'OLD_NODE':
-      node = nodes.add(data)
+      nodes.add(data)
 
       break
   }
