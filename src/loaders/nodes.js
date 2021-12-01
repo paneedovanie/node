@@ -26,8 +26,8 @@ class Nodes {
       node.sendMessage(message)
   }
 
-  getRandom() {
-    const index = Math.floor(Math.random() * (this.size - 0) + 0)
+  getRandomNode() {
+    const index = Math.floor(Math.random() * (this.size() - 0) + 0)
 
     return this.list[index]
   }

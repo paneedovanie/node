@@ -12,7 +12,7 @@ module.exports = class {
     if (!nodes.size())
       bc.setAsCreator()
     else
-      nodes.getRandom().sendMessage({
+      nodes.getRandomNode().sendMessage({
         action: 'SET_AS_CREATOR'
       })
   }
