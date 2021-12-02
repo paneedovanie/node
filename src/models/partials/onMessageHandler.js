@@ -66,6 +66,7 @@ module.exports = async function (message) {
       break
 
     case 'NEW_NODE':
+      console.log(data)
       nodes.add(data)
       break
 

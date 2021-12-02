@@ -45,8 +45,6 @@ module.exports = class {
   }
 
   onCloseHandler() {
-    nodes.
-      console.log('close')
-
+    nodes.remove(`${this.model.host}:${this.model.port}`)
   }
 }
