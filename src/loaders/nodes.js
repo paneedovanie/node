@@ -9,8 +9,6 @@ class Nodes {
     const node = await new Node({ host, port, type, confirm })
 
     this.list[`${host}:${port}`] = node
-
-    console.log('add', `${host}:${port}`)
   }
 
   async addExisting(model) {

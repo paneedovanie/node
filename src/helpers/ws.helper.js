@@ -89,15 +89,14 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'NEW_NODE':
-      console.log(data)
-      nodes.add(data)
+      await nodes.add(data)
       break
 
     case 'OLD_NODE':
       this.host = data.host
       this.port = data.port
 
-      nodes.addExisting(this)
+      await nodes.addExisting(this)
       break
 
     case 'ADD_BLOCK':
