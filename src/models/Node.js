@@ -1,6 +1,7 @@
 const
   WebSocket = require("ws"),
-  { messageSending, messageReceiving } = require('../helpers/ws.helper')
+  { messageSending, messageReceiving } = require('../helpers/ws.helper'),
+  onMessageHandler = require('./partials/onMessageHandler')
 
 module.exports = class {
   constructor({ host = '', port = 5000, type = null, model = null }) {
@@ -10,7 +11,7 @@ module.exports = class {
     this.model.port = port
 
     this.model.on('open', this.onOpenHandler.bind(this))
-    this.model.on('message', this.onMessageHandler.bind(this))
+    this.model.on('message', onMessageHandler.bind(this))
     this.model.on('close', this.onCloseHandler.bind(this))
   }
 
@@ -43,42 +44,9 @@ module.exports = class {
     // this.sendMessage({ action: 'REQUEST_NEXT_BLOCK', data: bc.storageLastBlock })
   }
 
-  onMessageHandler(message) {
-    const { action, data } = messageReceiving(message)
-
-    switch (action) {
-      case 'CONFIG':
-        bcConfig = data
-
-        break
-      case 'REQUESTED_NEXT_BLOCK':
-        if (!data) {
-          bc.status = 'validated'
-          this.sendMessage({ action: 'VALIDATED_NODE' })
-          return
-        }
-
-        bc.addBlock(data)
-        this.sendMessage({ action: 'REQUEST_NEXT_BLOCK', data: data })
-
-        break
-
-      case 'ADD_BLOCK':
-        bc.addBlock(data)
-        break
-
-      case 'NEW_NODE':
-        nodes.add(data)
-        break
-
-      case 'SET_AS_CREATOR':
-        bc.setAsCreator()
-        break
-    }
-  }
-
   onCloseHandler() {
-    console.log('close')
+    nodes.
+      console.log('close')
 
   }
 }
