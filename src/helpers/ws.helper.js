@@ -60,7 +60,8 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'CONFIG':
-      bcConfig = data
+      if (bcConfig.VERSION < data.VERSION)
+        bcConfig = data
 
       break
 
