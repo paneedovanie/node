@@ -44,6 +44,6 @@ module.exports = class {
   }
 
   onCloseHandler() {
-    nodes.remove(`${this.model.host}:${this.model.port}`)
+    nodes.remove(`${this.host}:${this.port}`)
   }
 }
