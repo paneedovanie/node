@@ -2,34 +2,42 @@ const Node = require('../models/Node')
 
 class Nodes {
   constructor() {
-    this.list = []
+    this.list = {}
   }
 
   async add({ host = null, port = 5000, type = null, confirm = false }) {
     const node = await new Node({ host, port, type, confirm })
 
-    this.list.push(node)
+    this.list[`${host}:${port}`] = node
   }
 
   async addExisting(model) {
     const node = await new Node({ model: model })
 
-    this.list.push(node)
+    this.list[`${model.host}:${model.port}`] = node
+  }
+
+  remove(key) {
+    delete this.list[key]
   }
 
   size() {
-    return this.list.length
+    return Object.keys(this.list).length
   }
 
   sendAll(message) {
-    for (const node of this.list)
+    for (const key of Object.keys(this.list)) {
+      const node = this.list[key]
       node.sendMessage(message)
+    }
   }
 
   getRandomNode() {
-    const index = Math.floor(Math.random() * (this.size() - 0) + 0)
+    const
+      index = Math.floor(Math.random() * (this.size() - 0) + 0),
+      key = Object.keys(this.list)[index]
 
-    return this.list[index]
+    return this.list[key]
   }
 }
 
