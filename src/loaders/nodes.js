@@ -9,12 +9,16 @@ class Nodes {
     const node = await new Node({ host, port, type, confirm })
 
     this.list[`${host}:${port}`] = node
+
+    console.log('add', `${host}:${port}`)
   }
 
   async addExisting(model) {
-    const node = await new Node({ model: model })
+    const
+      { host, port } = model,
+      node = await new Node({ model: model })
 
-    this.list[`${model.host}:${model.port}`] = node
+    this.list[`${host}:${port}`] = node
   }
 
   remove(key) {

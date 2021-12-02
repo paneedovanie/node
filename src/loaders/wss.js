@@ -1,7 +1,6 @@
 const
   { Server } = require("ws"),
-  { messageSending, messageReceiving } = require('../helpers/ws.helper'),
-  onMessageHandler = require('../models/partials/onMessageHandler')
+  { messageSending, messageReceiving, onMessageHandler } = require('../helpers/ws.helper')
 
 module.exports = () => {
   const wss = new Server({ server });
