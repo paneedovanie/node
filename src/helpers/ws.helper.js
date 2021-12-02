@@ -62,11 +62,6 @@ module.exports.onMessageHandler = async function (message) {
     case 'CONFIG':
       if (bcConfig.VERSION < data.VERSION)
         bcConfig = data
-      else
-        nodes.sendAll(messageSending({
-          action: 'CONFIG',
-          data: bcConfig
-        }))
       break
 
     case 'VALIDATED_NODE':
