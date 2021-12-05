@@ -117,13 +117,13 @@ module.exports.onMessageHandler = async function (message) {
     case 'VERIFY_TRANSACTION':
       const result = await bc.addTransaction(data.tx, false)
       if (result.status === 'success')
-        this.sendMessage({
+        this.send(messageSending({
           action: 'VERIFIED_TRANSACTION',
           data: {
             tempId: data.tempId,
             publicKey: config.key
           }
-        })
+        }))
       break
 
     case 'VERIFIED_TRANSACTION':
