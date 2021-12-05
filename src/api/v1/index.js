@@ -35,10 +35,6 @@ module.exports = (app) => {
       if (result.status === 'error')
         validationError(result.message)
       else {
-        nodes.sendAll({
-          action: 'ADD_TRANSACTION',
-          data: req.body
-        })
         return result
       }
     }, ACCEPTED)
