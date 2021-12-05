@@ -114,17 +114,18 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'VERIFY_TRANSACTION':
-      const result = bc.addTransaction(data.tx, false)
+      const result = await bc.addTransaction(data.tx, false)
       if (result.status === 'success')
         this.sendMessage({
           action: 'VERIFIED_TRANSACTION',
-          tempId: data.tempId,
-          publicId: config.key
+          data: {
+            tempId: data.tempId,
+            publicId: config.key
+          }
         })
       break
 
     case 'VERIFIED_TRANSACTION':
-      console.log(data)
       bc.pendingTransactions[data.tempId].confs.push(data.publicId)
       break
 
