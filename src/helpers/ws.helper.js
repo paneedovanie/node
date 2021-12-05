@@ -120,13 +120,13 @@ module.exports.onMessageHandler = async function (message) {
           action: 'VERIFIED_TRANSACTION',
           data: {
             tempId: data.tempId,
-            publicId: config.key
+            publicKey: config.key
           }
         })
       break
 
     case 'VERIFIED_TRANSACTION':
-      bc.pendingTransactions[data.tempId].confs.push(data.publicId)
+      bc.pendingTransactions[data.tempId].confs.push(data.publicKey)
       break
 
     case 'ADD_BLOCK':

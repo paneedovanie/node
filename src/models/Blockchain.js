@@ -157,8 +157,7 @@ module.exports = class extends EventEmitter {
         this.transactions.push(transaction)
       }, bcConfig.transTime)
 
-      transaction.txId = this.txId
-      this.pendingTransactions[this.txId] = transaction
+      this.pendingTransactions[this.tempId] = transaction
 
       events.emit('bc-VERIFY_TRANSACTION', {
         tempId: this.tempId,
