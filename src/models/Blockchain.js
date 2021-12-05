@@ -111,14 +111,6 @@ module.exports = class extends EventEmitter {
       txHeight = 0
 
     if (last) {
-      if (last.reward > 0) {
-        const tx = new Transaction({ to: last.creator, data: { coin: last.reward } })
-
-        console.log(last.reward)
-
-        this.addTransaction(tx)
-      }
-
       index = last.index + 1
       prevHash = last.hash
       txHeight = last.txHeight + transactions.length
@@ -181,6 +173,14 @@ module.exports = class extends EventEmitter {
     if (this.create) return
 
     this.create = true
+
+    const last = this.lastBlock()
+
+    if (last && last.reward > 0) {
+      const tx = new Transaction({ to: last.creator, data: { coin: last.reward } })
+
+      this.addTransaction(tx)
+    }
 
     const newCreatorTimer = setTimeout(() => {
       this.create = false
