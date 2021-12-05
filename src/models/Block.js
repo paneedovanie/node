@@ -3,7 +3,7 @@ const
   { precisionRoundMod } = require('../helpers/number.helper')
 
 module.exports = class {
-  constructor({ index = null, hash = null, transactions = null, merkelRoot = 0, reward = 0, prevHash = null, txHeight = 0, creator = null, timestamp = null }) {
+  constructor({ index = null, hash = null, transactions = [], merkelRoot = 0, reward = 0, prevHash = null, txHeight = 0, creator = null, timestamp = null }) {
     this.version = bcConfig.version
     this.index = index || this.generateIndex()
     this.transactions = transactions

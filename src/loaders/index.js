@@ -19,7 +19,11 @@ module.exports = async () => {
   console.log("Websocket Initialized")
 
   global.bc = new Blockchain
-  await bc.init()
+  try {
+    await bc.init()
+  } catch (err) {
+    bc.reset()
+  }
 
   if (!config.hasRef) {
     await bc.generateGenesisBlock()

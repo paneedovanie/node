@@ -16,6 +16,9 @@ module.exports = class extends EventEmitter {
     this.status = 'inactive'
     this.create = false
 
+    this.tempId = 0
+    this.pendingTransactions = {}
+
     this.storageLastBlock = null
 
     this.config = config
@@ -33,7 +36,7 @@ module.exports = class extends EventEmitter {
       if (!fs.existsSync(this.path)) {
 
         fs.mkdir('store', { recursive: true }, (err) => {
-          if (err) return cb(err);
+          if (err) return rej(err);
         })
 
         fs.writeFileSync(this.path, "")
@@ -49,7 +52,9 @@ module.exports = class extends EventEmitter {
           if (!strBlock || strBlock === '') return
           let block = new Block(JSON.parse(strBlock))
 
-          if (!block.isValid() || block.prevHash ? block.prevHash !== prevBlock.hash : false)
+          if (!block.isValid())
+            rej('Invalid Block')
+          if (block.prevHash ? block.prevHash !== prevBlock.hash : false)
             rej('Invalid Block')
 
           this.storageLastBlock = { ...block }
@@ -61,9 +66,9 @@ module.exports = class extends EventEmitter {
         });
 
         lineReader.on('close', async () => {
-          if (!config.hasRef) {
+          if (!config.hasRef)
             this.status = 'validated'
-          }
+
           res(true)
         });
       }
@@ -134,19 +139,34 @@ module.exports = class extends EventEmitter {
     return new Transaction({ from, to, data })
   }
 
-  async addTransaction(data) {
+  async addTransaction(data, verify = true) {
     const
-      balance = await this.balance(data.from),
-      transaction = new Transaction(data)
+      balance = await this.balance(data.from)
 
-    let total = transaction.data.coin + transaction.fee
+    let
+      transaction = new Transaction(data),
+      total = transaction.data.coin + transaction.fee
 
     for (const tx of this.transactions)
       if (tx.from === transaction.from) return { status: 'error', message: 'Pending transaction' }
     if (balance.coin < total) return { status: 'error', message: 'Insufficient Funds' }
     if (!await transaction.isValid()) return { status: 'error', message: 'Pending transaction' }
 
-    this.transactions.push(transaction)
+    if (verify) {
+      setTimeout(() => {
+        this.transactions.push(transaction)
+
+        events.emit('bc-VERIFY_TRANSACTION', {
+          tempId: this.tempId,
+          tx: transaction,
+        })
+      }, bcConfig.transTime)
+
+      transaction.txId = this.txId
+      this.pendingTransactions[this.txId] = transaction
+
+      this.txId++
+    }
 
     return { status: 'success' }
   }
@@ -156,10 +176,19 @@ module.exports = class extends EventEmitter {
 
     this.create = true
 
-    const timer = setTimeout(() => {
+    const newCreatorTimer = setTimeout(() => {
       this.create = false
 
+      events.emit('bc-NEW_CREATOR')
+
+      clearTimeout(newCreatorTimer)
+    }, bcConfig.blockTime - (bcConfig.transTime * 1.5))
+
+    const timer = setTimeout(() => {
       const block = this.generateBlock()
+
+      this.transactions = []
+
       this.addBlock(block)
       events.emit('bc-BLOCK_CREATED', block)
 

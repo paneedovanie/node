@@ -9,6 +9,7 @@ module.exports = class {
     this.from = from
     this.data = data
     this.fee = fee || this.generateFee()
+    this.confs = []
     this.timestamp = timestamp || Date.now()
     this.hash = hash || this.generateHash()
     this.signature = signature
@@ -30,6 +31,7 @@ module.exports = class {
 
   generateHash() {
     let properties = { ...this }
+    delete properties.confs
     delete properties.hash
     delete properties.signature
 

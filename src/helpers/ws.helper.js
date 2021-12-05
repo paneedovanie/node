@@ -1,3 +1,5 @@
+const bc = require("../config/bc")
+
 const messageSending = (message) => {
   if (typeof message === 'string') return message
 
@@ -61,7 +63,6 @@ module.exports.onMessageHandler = async function (message) {
         action: 'REQUEST_NEXT_BLOCK',
         data: null
       })
-
       break
 
     case 'REQUESTED_NEXT_BLOCK':
@@ -108,6 +109,24 @@ module.exports.onMessageHandler = async function (message) {
       this.port = data.port
 
       await nodes.addExisting(this)
+      break
+
+    case 'ADD_TRANSACTION':
+      bc.addTransaction(data)
+      break
+
+    case 'VERIFY_TRANSACTION':
+      const result = bc.addTransaction(data.tx, false)
+      if (result.status === 'success')
+        this.sendMessage({
+          action: 'VERIFIED_TRANSACTION',
+          tempId: data.tempId,
+          publicId: config.key
+        })
+      break
+
+    case 'VERIFIED_TRANSACTION':
+      bc.pendingTransactions[data.tempId].confs.push(data.publicId)
       break
 
     case 'ADD_BLOCK':
