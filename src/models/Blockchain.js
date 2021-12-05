@@ -70,6 +70,11 @@ module.exports = class extends EventEmitter {
     })
   }
 
+  reset() {
+    fs.unlinkSync(this.path)
+    this.chain = []
+  }
+
   genesisBlock() {
     return this.chain[0]
   }
@@ -202,10 +207,11 @@ module.exports = class extends EventEmitter {
 
   valAndNxtBlk(data) {
     return new Promise((res, rej) => {
-      let result = null
-      let currBlock = data ? new Block(data) : null
+      let result = null,
+        currBlock = data ? new Block(data) : null,
+        lastBlock = this.lastBlock()
 
-      if (currBlock && !currBlock.isValid()) rej('Invalid Block')
+      if (currBlock && (!currBlock.isValid() || currBlock.index > lastBlock.index)) rej('Invalid Block')
 
       const lineReader = readline.createInterface({
         input: fs.createReadStream(this.path)

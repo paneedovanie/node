@@ -40,12 +40,27 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'REQUEST_NEXT_BLOCK':
-      block = await bc.valAndNxtBlk(data)
+      try {
+        block = await bc.valAndNxtBlk(data)
+
+        this.send(messageSending({
+          action: 'REQUESTED_NEXT_BLOCK',
+          data: block
+        }))
+      } catch (err) {
+        this.send(messageSending({
+          action: 'RESET_CHAIN'
+        }))
+      }
+      break
+
+    case 'REQUEST_NEXT_BLOCK':
+      bc.reset()
 
       this.send(messageSending({
-        action: 'REQUESTED_NEXT_BLOCK',
-        data: block
+        action: 'REQUESTED_NEXT_BLOCK'
       }))
+
       break
 
     case 'REQUESTED_NEXT_BLOCK':
