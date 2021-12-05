@@ -98,7 +98,7 @@ module.exports = class extends EventEmitter {
     this.addBlock(await this.generateBlock())
   }
 
-  generateBlock() {
+  async generateBlock() {
     const last = this.lastBlock(),
       transactions = this.transactions
 
@@ -111,8 +111,13 @@ module.exports = class extends EventEmitter {
       txHeight = 0
 
     if (last) {
-      if (last.reward > 0)
-        transactions.unshift(new Transaction({ to: last.creator, data: { coin: last.reward } }))
+      if (last.reward > 0) {
+        const tx = new Transaction({ to: last.creator, data: { coin: last.reward } })
+        if (bc.create)
+          await bc.addTransaction(tx)
+        else
+          events.emit('PAY_CREATOR', tx)
+      }
 
       index = last.index + 1
       prevHash = last.hash

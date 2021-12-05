@@ -11,6 +11,13 @@ module.exports = class {
     })
   }
 
+  PAY_CREATOR(data) {
+    nodes.sendAll({
+      action: 'ADD_TRANSACTION',
+      data
+    })
+  }
+
   BLOCK_CREATED(block) {
     nodes.sendAll({
       action: 'ADD_BLOCK',

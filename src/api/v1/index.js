@@ -1,3 +1,6 @@
+const bc = require("../../config/bc")
+const nodes = require("../../loaders/nodes")
+
 const
   { apiResponse, validationError } = require(`${__basedir}/helpers/error.helper`),
   {
@@ -30,13 +33,19 @@ module.exports = (app) => {
   app.post(`${suffix}/addTransaction`, async (req, res) => {
 
     apiResponse(res, async () => {
-      const result = await bc.addTransaction(req.body)
+      if (bc.create) {
+        const result = await bc.addTransaction(req.body)
 
-      if (result.status === 'error')
-        validationError(result.message)
-      else {
-        return result
+        if (result.status === 'error')
+          validationError(result.message)
       }
+      else {
+        nodes.sendAll({
+          action: 'ADD_TRANSACTION',
+          data: req.body
+        })
+      }
+      return result
     }, ACCEPTED)
   })
 
