@@ -26,6 +26,14 @@ module.exports.onMessageHandler = async function (message) {
 
   const { action, data } = messageReceiving(message)
 
+  const sendMessage = (message) => {
+    console.log(this)
+    if (typeof this.sendMessage === 'function')
+      this.sendMessage
+    else
+      this.send(messageSending(message))
+  }
+
   switch (action) {
     case 'NEW_PEER':
       this.host = data.host
@@ -141,11 +149,4 @@ module.exports.onMessageHandler = async function (message) {
     default:
       console.log(action)
   }
-}
-
-const sendMessage = (message) => {
-  if (typeof this.sendMessage === 'function')
-    this.sendMessage
-  else
-    this.send(messageSending(message))
 }
