@@ -71,7 +71,9 @@ module.exports = class extends EventEmitter {
   }
 
   reset() {
-    fs.unlinkSync(this.path)
+    try {
+      fs.unlinkSync(this.path)
+    } catch (err) { }
     this.chain = []
   }
 
