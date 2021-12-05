@@ -54,7 +54,7 @@ module.exports.onMessageHandler = async function (message) {
       }
       break
 
-    case 'REQUEST_NEXT_BLOCK':
+    case 'RESET_CHAIN':
       bc.reset()
 
       this.send(messageSending({
