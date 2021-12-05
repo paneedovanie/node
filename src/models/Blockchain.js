@@ -188,8 +188,8 @@ module.exports = class extends EventEmitter {
       clearTimeout(newCreatorTimer)
     }, bcConfig.blockTime - (bcConfig.transTime * 1.5))
 
-    const timer = setTimeout(() => {
-      const block = this.generateBlock()
+    const timer = setTimeout(async () => {
+      const block = await this.generateBlock()
 
       this.transactions = []
 

@@ -1,6 +1,3 @@
-const bc = require("../../config/bc")
-const nodes = require("../../loaders/nodes")
-
 const
   { apiResponse, validationError } = require(`${__basedir}/helpers/error.helper`),
   {
@@ -45,7 +42,7 @@ module.exports = (app) => {
           data: req.body
         })
       }
-      return result
+      return true
     }, ACCEPTED)
   })
 
