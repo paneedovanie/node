@@ -1,5 +1,3 @@
-const bc = require("../config/bc")
-
 const messageSending = (message) => {
   if (typeof message === 'string') return message
 
