@@ -1,3 +1,5 @@
+const bc = require("../config/bc")
+
 const messageSending = (message) => {
   if (typeof message === 'string') return message
 
@@ -110,7 +112,8 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'ADD_TRANSACTION':
-      bc.addTransaction(data)
+      if (bc.create)
+        bc.addTransaction(data)
       break
 
     case 'VERIFY_TRANSACTION':
