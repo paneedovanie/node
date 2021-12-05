@@ -12,6 +12,7 @@ module.exports = class {
   }
 
   PAY_CREATOR(data) {
+    console.log('pay')
     nodes.sendAll({
       action: 'ADD_TRANSACTION',
       data

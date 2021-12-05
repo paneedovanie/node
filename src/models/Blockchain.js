@@ -113,10 +113,10 @@ module.exports = class extends EventEmitter {
     if (last) {
       if (last.reward > 0) {
         const tx = new Transaction({ to: last.creator, data: { coin: last.reward } })
-        if (bc.create)
-          await bc.addTransaction(tx)
-        else
-          events.emit('PAY_CREATOR', tx)
+
+        console.log(last.reward)
+
+        this.addTransaction(tx)
       }
 
       index = last.index + 1
@@ -145,17 +145,19 @@ module.exports = class extends EventEmitter {
   }
 
   async addTransaction(data, verify = true) {
-    const
-      balance = await this.balance(data.from)
-
     let
       transaction = new Transaction(data),
       total = transaction.data.coin + transaction.fee
 
-    for (const tx of this.transactions)
-      if (tx.from === transaction.from) return { status: 'error', message: 'Pending transaction' }
-    if (balance.coin < total) return { status: 'error', message: 'Insufficient Funds' }
-    if (!await transaction.isValid()) return { status: 'error', message: 'Pending transaction' }
+    if (data.from) {
+      const
+        balance = await this.balance(data.from)
+
+      for (const tx of this.transactions)
+        if (tx.from === transaction.from) return { status: 'error', message: 'Pending transaction' }
+      if (balance.coin < total) return { status: 'error', message: 'Insufficient Funds' }
+      if (!await transaction.isValid()) return { status: 'error', message: 'Pending transaction' }
+    }
 
     if (verify) {
       setTimeout(() => {
