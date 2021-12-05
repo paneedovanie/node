@@ -31,17 +31,8 @@ module.exports.onMessageHandler = async function (message) {
       this.host = data.host
       this.port = data.port
 
-      block = await bc.valAndNxtBlk(data.lastBlock)
-
-      this.send(messageSending({
-        action: 'REQUESTED_NEXT_BLOCK',
-        data: block
-      }))
-      break
-
-    case 'REQUEST_NEXT_BLOCK':
       try {
-        block = await bc.valAndNxtBlk(data)
+        block = await bc.valAndNxtBlk(data.lastBlock)
 
         this.send(messageSending({
           action: 'REQUESTED_NEXT_BLOCK',
@@ -54,11 +45,21 @@ module.exports.onMessageHandler = async function (message) {
       }
       break
 
+    case 'REQUEST_NEXT_BLOCK':
+      block = await bc.valAndNxtBlk(data)
+
+      this.send(messageSending({
+        action: 'REQUESTED_NEXT_BLOCK',
+        data: block
+      }))
+      break
+
     case 'RESET_CHAIN':
       bc.reset()
 
       this.send(messageSending({
-        action: 'REQUESTED_NEXT_BLOCK'
+        action: 'REQUEST_NEXT_BLOCK',
+        data: null
       }))
 
       break
