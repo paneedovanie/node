@@ -117,7 +117,7 @@ module.exports.onMessageHandler = async function (message) {
     case 'VERIFY_TRANSACTION':
       const result = await bc.addTransaction(data.tx, false)
       if (result.status === 'success')
-        this.sendMessageAuto({
+        sendMessage({
           action: 'VERIFIED_TRANSACTION',
           data: {
             tempId: data.tempId,
@@ -143,7 +143,7 @@ module.exports.onMessageHandler = async function (message) {
   }
 }
 
-const sendMessageAuto = (message) => {
+const sendMessage = (message) => {
   if (typeof this.sendMessage === 'function')
     this.sendMessage
   else
