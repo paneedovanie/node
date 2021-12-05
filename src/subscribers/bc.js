@@ -4,6 +4,7 @@ module.exports = class {
   }
 
   VERIFY_TRANSACTION(data) {
+    console.log('verify')
     nodes.sendAll({
       action: 'VERIFY_TRANSACTION',
       data

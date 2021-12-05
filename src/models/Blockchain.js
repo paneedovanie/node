@@ -155,15 +155,15 @@ module.exports = class extends EventEmitter {
     if (verify) {
       setTimeout(() => {
         this.transactions.push(transaction)
-
-        events.emit('bc-VERIFY_TRANSACTION', {
-          tempId: this.tempId,
-          tx: transaction,
-        })
       }, bcConfig.transTime)
 
       transaction.txId = this.txId
       this.pendingTransactions[this.txId] = transaction
+
+      events.emit('bc-VERIFY_TRANSACTION', {
+        tempId: this.tempId,
+        tx: transaction,
+      })
 
       this.txId++
     }

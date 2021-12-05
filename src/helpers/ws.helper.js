@@ -124,6 +124,7 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'VERIFIED_TRANSACTION':
+      console.log(data)
       bc.pendingTransactions[data.tempId].confs.push(data.publicId)
       break
 
