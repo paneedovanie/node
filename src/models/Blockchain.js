@@ -197,7 +197,7 @@ module.exports = class extends EventEmitter {
       events.emit('bc-NEW_CREATOR')
 
       clearTimeout(newCreatorTimer)
-    }, bcConfig.blockTime - (bcConfig.transCfTm * 1.5))
+    }, bcConfig.blockTime - (bcConfig.transCfTm + 100))
 
     const timer = setTimeout(async () => {
       this.pendingBlock = await this.generateBlock()
@@ -208,6 +208,7 @@ module.exports = class extends EventEmitter {
 
         this.addBlock(this.pendingBlock)
         events.emit('bc-BLOCK_CREATED', this.pendingBlock)
+        this.pendingBlock = null
 
         clearTimeout(valTimer)
       }, bcConfig.blockCfTm)
