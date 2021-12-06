@@ -26,6 +26,7 @@ module.exports.onMessageHandler = async function (message) {
     result = null
 
   const { action, data } = messageReceiving(message)
+  console.log(action, data)
 
   const sendMessage = (message) => {
     if (typeof this.sendMessage === 'function')
