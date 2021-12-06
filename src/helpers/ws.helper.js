@@ -53,7 +53,6 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'REQUEST_NEXT_BLOCK':
-      console.log(data)
       block = await bc.valAndNxtBlk(data)
 
       sendMessage({
@@ -88,7 +87,7 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'VALIDATED_NODE':
-      sendMessageg({
+      sendMessage({
         action: 'CONFIG',
         data: bcConfig
       })
@@ -137,7 +136,6 @@ module.exports.onMessageHandler = async function (message) {
 
     case 'VERIFIED_TRANSACTION':
       bc.pendingTransactions[data.tempId].confs.push(data.publicKey)
-      console.log(bc.pendingTransactions)
       break
 
     case 'ADD_BLOCK':
