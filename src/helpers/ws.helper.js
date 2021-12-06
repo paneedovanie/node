@@ -28,7 +28,7 @@ module.exports.onMessageHandler = async function (message) {
 
   const sendMessage = (message) => {
     if (typeof this.sendMessage === 'function')
-      this.sendMessage
+      this.sendMessage(message)
     else
       this.send(messageSending(message))
   }
@@ -53,6 +53,7 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'REQUEST_NEXT_BLOCK':
+      console.log(data)
       block = await bc.valAndNxtBlk(data)
 
       sendMessage({
