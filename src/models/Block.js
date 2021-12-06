@@ -12,6 +12,7 @@ module.exports = class {
     this.merkelRoot = merkelRoot || this.generateMerkleRoot()
     this.timestamp = timestamp || Date.now()
     this.creator = creator
+    this.confs = []
     this.prevHash = prevHash
     this.hash = hash || this.generateHash()
   }
@@ -22,6 +23,7 @@ module.exports = class {
 
   generateHash() {
     let properties = { ...this }
+    delete properties.confs
     delete properties.hash
     delete properties.signature
 

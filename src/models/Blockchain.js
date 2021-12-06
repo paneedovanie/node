@@ -15,9 +15,11 @@ module.exports = class extends EventEmitter {
     this.path = `./store/chain-${this.num}`
     this.status = 'inactive'
     this.create = false
+    this.validator = false
 
     this.tempId = 0
     this.pendingTransactions = {}
+    this.pendingBlock = null
 
     this.storageLastBlock = null
 
@@ -25,7 +27,6 @@ module.exports = class extends EventEmitter {
 
     this.chain = []
     this.transactions = []
-    this.pendingBlocks = []
   }
 
   init() {
@@ -119,17 +120,19 @@ module.exports = class extends EventEmitter {
     return new Block({ index, prevHash, transactions, txHeight, creator: config.key })
   }
 
-  async addBlock(data) {
+  async addBlock(data, verify = true) {
     const
       block = new Block(data),
       last = bc.lastBlock()
 
     if (!block.isValid() || (last && block.prevHash !== last.hash)) return
 
-    this.chain.push(block)
+    if (verify) {
+      this.chain.push(block)
 
-    const strBlock = JSON.stringify(block) + "\n"
-    fs.appendFileSync(this.path, strBlock);
+      const strBlock = JSON.stringify(block) + "\n"
+      fs.appendFileSync(this.path, strBlock);
+    }
   }
 
   async generateTransaction({ from = null, to = null, data = null }) {
@@ -154,11 +157,10 @@ module.exports = class extends EventEmitter {
     if (verify) {
       setTimeout(() => {
         const totalConf = bcConfig.transConf > nodes.size() ? nodes.size() : bcConfig.transConf
-        console.log(this.pendingTransactions[this.tempId].confs.length, totalConf)
         if (this.pendingTransactions[this.tempId].confs.length < totalConf) return
 
         this.transactions.push(transaction)
-      }, bcConfig.transTime)
+      }, bcConfig.transCfTm)
 
       this.pendingTransactions[this.tempId] = transaction
 
@@ -192,15 +194,22 @@ module.exports = class extends EventEmitter {
       events.emit('bc-NEW_CREATOR')
 
       clearTimeout(newCreatorTimer)
-    }, bcConfig.blockTime - (bcConfig.transTime * 1.5))
+    }, bcConfig.blockTime - (bcConfig.transCfTm * 1.5))
 
     const timer = setTimeout(async () => {
-      const block = await this.generateBlock()
+      this.pendingBlock = await this.generateBlock()
 
       this.transactions = []
 
-      this.addBlock(block)
-      events.emit('bc-BLOCK_CREATED', block)
+      const valTimer = setTimeout(async () => {
+
+        this.addBlock(block)
+        events.emit('bc-BLOCK_CREATED', block)
+
+        clearTimeout(valTimer)
+      }, bcConfig.blockCfTm)
+
+      events.emit('bc-VERIFY_BLOCK', this.pendingBlock)
 
       clearTimeout(timer)
     }, bcConfig.blockTime)

@@ -4,15 +4,21 @@ module.exports = class {
   }
 
   VERIFY_TRANSACTION(data) {
-    console.log('verify')
     nodes.sendAll({
       action: 'VERIFY_TRANSACTION',
       data
     })
   }
 
+  VERIFY_BLOCK(data) {
+    console.log('verify')
+    nodes.sendAll({
+      action: 'VERIFY_BLOCK',
+      data
+    })
+  }
+
   PAY_CREATOR(data) {
-    console.log('pay')
     nodes.sendAll({
       action: 'ADD_TRANSACTION',
       data

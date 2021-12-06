@@ -22,7 +22,8 @@ module.exports = {
 module.exports.onMessageHandler = async function (message) {
   let
     block = null,
-    node = null
+    node = null,
+    result = null
 
   const { action, data } = messageReceiving(message)
 
@@ -122,7 +123,7 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'VERIFY_TRANSACTION':
-      const result = await bc.addTransaction(data.tx, false)
+      result = await bc.addTransaction(data.tx, false)
 
       if (result.status === 'success')
         sendMessage({
@@ -136,6 +137,22 @@ module.exports.onMessageHandler = async function (message) {
 
     case 'VERIFIED_TRANSACTION':
       bc.pendingTransactions[data.tempId].confs.push(data.publicKey)
+      break
+
+    case 'VERIFY_BLOCK':
+      result = await bc.addBlock(data, false)
+
+      if (result.status === 'success')
+        sendMessage({
+          action: 'VERIFIED_BLOCK',
+          data: {
+            publicKey: config.key
+          }
+        })
+      break
+
+    case 'VERIFIED_BLOCK':
+      bc.pendingBlock.confs.push(data.publicKey)
       break
 
     case 'ADD_BLOCK':
