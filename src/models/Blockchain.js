@@ -154,7 +154,8 @@ module.exports = class extends EventEmitter {
     if (verify) {
       setTimeout(() => {
         const totalConf = bcConfig.transConf > nodes.size() ? nodes.size() : bcConfig.transConf
-        if (this.pendingTransactions[this.tempId].confs < totalConf) return
+        console.log(this.pendingTransactions[this.tempId].confs.length, totalConf)
+        if (this.pendingTransactions[this.tempId].confs.length < totalConf) return
 
         this.transactions.push(transaction)
       }, bcConfig.transTime)

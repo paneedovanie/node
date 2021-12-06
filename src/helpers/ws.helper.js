@@ -123,6 +123,7 @@ module.exports.onMessageHandler = async function (message) {
 
     case 'VERIFY_TRANSACTION':
       const result = await bc.addTransaction(data.tx, false)
+      console.log(result)
       if (result.status === 'success')
         sendMessage({
           action: 'VERIFIED_TRANSACTION',
@@ -135,6 +136,7 @@ module.exports.onMessageHandler = async function (message) {
 
     case 'VERIFIED_TRANSACTION':
       bc.pendingTransactions[data.tempId].confs.push(data.publicKey)
+      console.log(bc.pendingTransactions)
       break
 
     case 'ADD_BLOCK':
