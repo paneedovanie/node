@@ -208,7 +208,6 @@ module.exports = class extends EventEmitter {
 
         this.addBlock(this.pendingBlock)
         events.emit('bc-BLOCK_CREATED', this.pendingBlock)
-        this.pendingBlock = null
 
         clearTimeout(valTimer)
       }, bcConfig.blockCfTm)
