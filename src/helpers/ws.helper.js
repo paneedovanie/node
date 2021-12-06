@@ -142,7 +142,7 @@ module.exports.onMessageHandler = async function (message) {
     case 'VERIFY_BLOCK':
       result = await bc.addBlock(data, false)
 
-      if (result.status === 'success')
+      if (result)
         sendMessage({
           action: 'VERIFIED_BLOCK',
           data: {

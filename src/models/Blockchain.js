@@ -125,7 +125,7 @@ module.exports = class extends EventEmitter {
       block = new Block(data),
       last = bc.lastBlock()
 
-    if (!block.isValid() || (last && block.prevHash !== last.hash)) return
+    if (!block.isValid() || (last && block.prevHash !== last.hash)) return false
 
     if (verify) {
       this.chain.push(block)
@@ -133,6 +133,8 @@ module.exports = class extends EventEmitter {
       const strBlock = JSON.stringify(block) + "\n"
       fs.appendFileSync(this.path, strBlock);
     }
+
+    return true
   }
 
   async generateTransaction({ from = null, to = null, data = null }) {
