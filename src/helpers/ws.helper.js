@@ -41,10 +41,10 @@ module.exports.onMessageHandler = async function (message) {
       try {
         block = await bc.valAndNxtBlk(data.lastBlock)
 
-        this.send(messageSending({
+        sendMessage({
           action: 'REQUESTED_NEXT_BLOCK',
           data: block
-        }))
+        })
       } catch (err) {
         this.send(messageSending({
           action: 'RESET_CHAIN'
@@ -55,16 +55,16 @@ module.exports.onMessageHandler = async function (message) {
     case 'REQUEST_NEXT_BLOCK':
       block = await bc.valAndNxtBlk(data)
 
-      this.send(messageSending({
+      sendMessage({
         action: 'REQUESTED_NEXT_BLOCK',
         data: block
-      }))
+      })
       break
 
     case 'RESET_CHAIN':
       bc.reset()
 
-      this.sendMessage({
+      sendMessage({
         action: 'REQUEST_NEXT_BLOCK',
         data: null
       })
@@ -73,12 +73,12 @@ module.exports.onMessageHandler = async function (message) {
     case 'REQUESTED_NEXT_BLOCK':
       if (!data) {
         bc.status = 'validated'
-        this.sendMessage({ action: 'VALIDATED_NODE' })
+        sendMessage({ action: 'VALIDATED_NODE' })
         return
       }
 
       bc.addBlock(data)
-      this.sendMessage({ action: 'REQUEST_NEXT_BLOCK', data: data })
+      sendMessage({ action: 'REQUEST_NEXT_BLOCK', data: data })
       break
 
     case 'CONFIG':
@@ -87,10 +87,10 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'VALIDATED_NODE':
-      this.send(messageSending({
+      sendMessageg({
         action: 'CONFIG',
         data: bcConfig
-      }))
+      })
 
       const tempMessage = {
         action: 'NEW_NODE',
@@ -123,7 +123,7 @@ module.exports.onMessageHandler = async function (message) {
 
     case 'VERIFY_TRANSACTION':
       const result = await bc.addTransaction(data.tx, false)
-      console.log(result)
+
       if (result.status === 'success')
         sendMessage({
           action: 'VERIFIED_TRANSACTION',
