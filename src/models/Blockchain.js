@@ -124,6 +124,7 @@ module.exports = class extends EventEmitter {
     const
       block = new Block(data),
       last = bc.lastBlock()
+    console.log(block)
 
     if (!block.isValid() || (last && block.prevHash !== last.hash)) return false
 

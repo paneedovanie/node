@@ -26,7 +26,7 @@ module.exports.onMessageHandler = async function (message) {
     result = null
 
   const { action, data } = messageReceiving(message)
-  console.log(action, data)
+  // console.log(action, data)
 
   const sendMessage = (message) => {
     if (typeof this.sendMessage === 'function')
@@ -142,6 +142,7 @@ module.exports.onMessageHandler = async function (message) {
 
     case 'VERIFY_BLOCK':
       result = await bc.addBlock(data, false)
+      console.log(result)
 
       if (result)
         sendMessage({

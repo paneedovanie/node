@@ -3,13 +3,13 @@ const
   { precisionRoundMod } = require('../helpers/number.helper')
 
 module.exports = class {
-  constructor({ txId = null, to = null, from = null, data = null, fee = null, timestamp = null, hash = null, signature = null }) {
+  constructor({ txId = null, to = null, confs = [], from = null, data = null, fee = null, timestamp = null, hash = null, signature = null }) {
     this.txId = txId || null
     this.to = to
     this.from = from
     this.data = data
     this.fee = fee || this.generateFee()
-    this.confs = []
+    this.confs = confs
     this.timestamp = timestamp || Date.now()
     this.hash = hash || this.generateHash()
     this.signature = signature
