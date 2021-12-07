@@ -11,7 +11,6 @@ module.exports = class {
   }
 
   VERIFY_BLOCK(data) {
-    console.log('verify')
     nodes.sendAll({
       action: 'VERIFY_BLOCK',
       data
