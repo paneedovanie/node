@@ -250,13 +250,13 @@ module.exports = class extends EventEmitter {
             if (tx.to === publicKey)
               balance.coin += tx.data.coin
 
-            balance.coin = precisionRoundMod(balance.coin, 16)
+            balance.coin = precisionRoundMod(balance.coin, bcConfig.decPlace)
           }
         }
       });
 
       lineReader.on('close', () => {
-        balance.coin = precisionRoundMod(balance.coin, 16)
+        balance.coin = precisionRoundMod(balance.coin, bcConfig.decPlace)
         res(balance)
       });
     })
