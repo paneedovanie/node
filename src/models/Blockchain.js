@@ -209,6 +209,8 @@ module.exports = class extends EventEmitter {
 
         this.addBlock(this.pendingBlock)
         events.emit('bc-BLOCK_CREATED', this.pendingBlock)
+
+        console.log('BLOCK CREATED: Index -', this.pendingBlock.index, '| HASH -', this.pendingBlock.hash.substr(0, 3) + '....')
         this.pendingBlock = null
 
         clearTimeout(valTimer)

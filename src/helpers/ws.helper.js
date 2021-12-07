@@ -153,12 +153,12 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'VERIFIED_BLOCK':
-      console.log(data.publicKey)
       bc.pendingBlock.confs.push(data.publicKey)
       break
 
     case 'ADD_BLOCK':
       bc.addBlock(data)
+      console.log('BLOCK ADDED: Index -', data.index, '| HASH -', data.hash.substr(0, 3) + '....')
       break
 
     case 'SET_AS_CREATOR':

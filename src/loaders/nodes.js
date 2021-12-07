@@ -20,7 +20,6 @@ class Nodes {
   }
 
   remove(key) {
-    console.log(key)
     delete this.list[key]
   }
 
@@ -29,9 +28,7 @@ class Nodes {
   }
 
   sendAll(message) {
-    console.log(message)
     for (const key of Object.keys(this.list)) {
-      console.log(key)
       const node = this.list[key]
       node.sendMessage(message)
     }
