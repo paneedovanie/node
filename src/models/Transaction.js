@@ -24,7 +24,7 @@ module.exports = class {
       if (this.data.custom)
         byteLen += JSON.stringify(this.data.custom).length
 
-      return precisionRoundMod(byteLen * 0.0001, 16)
+      return precisionRoundMod(byteLen * 0.0001, bcConfig.decPlace)
     } else
       return 0
   }

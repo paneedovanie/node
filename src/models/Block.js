@@ -54,7 +54,7 @@ module.exports = class {
         if (!level && !item.txId) {
           item.txId = txId
           txId++
-          reward += precisionRoundMod(item.fee, 16)
+          reward += precisionRoundMod(item.fee, bcConfig.decPlace)
           this.reward = reward
         }
 

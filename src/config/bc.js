@@ -1,4 +1,5 @@
 module.exports = {
+  decPlace: process.env.DEC_PLACE || 8,
   fee: process.env.FEE || 0.001,
   transSize: process.env.TRANS_SIZE || 1_000,
   transTime: process.env.TRANS_TIME || 1_000,
