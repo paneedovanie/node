@@ -7,7 +7,10 @@ module.exports = () => {
 
   wss.on('connection', function connection(ws, request, client) {
     ws.on('message', onMessageHandler);
-    ws.on('close', () => nodes.remove(`${this.host}:${this.port}`));
+    ws.on('close', function () {
+      console.log(this, 'close')
+      nodes.remove(`${this.host}:${this.port}`)
+    });
   });
 
   events.on('ws-send', (message, cl = null) => {
