@@ -158,7 +158,7 @@ module.exports.onMessageHandler = async function (message) {
 
     case 'ADD_BLOCK':
       bc.addBlock(data)
-      console.log('BLOCK ADDED: Index -', data.index, '| HASH -', data.hash.substr(0, 3) + '....')
+      console.log('BLOCK ADDED: Index -', data.index, '| HASH -', data.hash.substr(0, 4) + '....')
       break
 
     case 'SET_AS_CREATOR':
