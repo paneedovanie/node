@@ -20,6 +20,7 @@ class Nodes {
   }
 
   remove(key) {
+    console.log(key)
     delete this.list[key]
   }
 
