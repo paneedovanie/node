@@ -278,7 +278,7 @@ module.exports = class extends EventEmitter {
         if (!data) {
           result = block
           lineReader.close()
-        } else if (block.prevHash ? block.prevHash !== currBlock.hash : false)
+        } else if (block.index === currBlock.index && block.hash !== block.hash)
           rej('Invalid Block')
         else if (currBlock.hash === block.prevHash) {
           result = block
