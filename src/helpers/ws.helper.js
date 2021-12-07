@@ -26,7 +26,7 @@ module.exports.onMessageHandler = async function (message) {
     result = null
 
   const { action, data } = messageReceiving(message)
-  // console.log(action, data)
+  console.log(action, data)
 
   const sendMessage = (message) => {
     if (typeof this.sendMessage === 'function')
@@ -42,12 +42,14 @@ module.exports.onMessageHandler = async function (message) {
 
       try {
         block = await bc.valAndNxtBlk(data.lastBlock)
+        console.log(block)
 
         sendMessage({
           action: 'REQUESTED_NEXT_BLOCK',
           data: block
         })
       } catch (err) {
+        console.log(err)
         this.send(messageSending({
           action: 'RESET_CHAIN'
         }))
@@ -153,6 +155,7 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'VERIFIED_BLOCK':
+      console.log(data.publicKey)
       bc.pendingBlock.confs.push(data.publicKey)
       break
 

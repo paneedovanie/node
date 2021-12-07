@@ -29,7 +29,9 @@ class Nodes {
   }
 
   sendAll(message) {
+    console.log(message)
     for (const key of Object.keys(this.list)) {
+      console.log(key)
       const node = this.list[key]
       node.sendMessage(message)
     }
@@ -51,8 +53,8 @@ module.exports = async () => {
     nodes.add({ host: config.refHost, port: config.refPort, type: 'ref' })
 
   setInterval(() => {
-    console.log('status', bc.create)
-    console.log('nodes', nodes.size())
+    // console.log('status', bc.create)
+    // console.log('nodes', nodes.size())
   }, 100)
 
   return nodes
