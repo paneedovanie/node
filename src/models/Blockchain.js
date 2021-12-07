@@ -204,6 +204,8 @@ module.exports = class extends EventEmitter {
       this.transactions = []
 
       const valTimer = setTimeout(async () => {
+        const totalConf = bcConfig.blockConf > nodes.size() ? nodes.size() : bcConfig.blockConf
+        if (this.pendingBlock.confs.length < totalConf) return
 
         this.addBlock(this.pendingBlock)
         events.emit('bc-BLOCK_CREATED', this.pendingBlock)
