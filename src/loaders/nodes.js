@@ -52,7 +52,7 @@ class Nodes {
 
     for (const key of keys) {
       const
-        node = this.list[key1].model || this.list[key1],
+        node = this.list[key].model || this.list[key],
         balance = await bc.balance(node.publicKey),
         SPLastIndex = stakePool.length - 1
 
