@@ -98,6 +98,7 @@ module.exports.onMessageHandler = async function (message) {
       const tempMessage = {
         action: 'NEW_NODE',
         data: {
+          publicKey: this.publicKey,
           host: this.host,
           port: this.port,
           type: 'new'
@@ -113,6 +114,7 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'OLD_NODE':
+      this.publicKey = data.publicKey
       this.host = data.host
       this.port = data.port
 

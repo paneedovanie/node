@@ -38,6 +38,7 @@ module.exports = class {
         this.sendMessage({
           action: 'OLD_NODE',
           data: {
+            publicKey: config.key,
             host: config.host,
             port: config.port,
             type: 'old'
