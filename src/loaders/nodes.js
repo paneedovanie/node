@@ -60,7 +60,8 @@ class Nodes {
         balance = await bc.balance(node.publicKey),
         SPLastIndex = stakePool.length - 1
 
-      console.log(node)
+      console.log(this.list[key1].model ? this.list[key1].model.publicKey : this.list[key1].publicKey)
+
 
       if (balance.stake) {
         stakePool.push({

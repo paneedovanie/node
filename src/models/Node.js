@@ -5,7 +5,7 @@ const
 module.exports = class {
   constructor({ publicKey = null, host = null, port = null, type = 'null', model = null }) {
     this.type = type
-    this.publicKey = publicKey || model.publicKey
+    this.publicKey = publicKey || model ? model.publicKey : null
     this.host = host || model.host
     this.port = port || model.port
     this.model = model
