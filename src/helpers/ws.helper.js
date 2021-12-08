@@ -90,7 +90,7 @@ module.exports.onMessageHandler = async function (message) {
       break
 
     case 'PUBLIC_KEY':
-      this.publicKey = data
+      this.model.publicKey = data
       break
 
     case 'VALIDATED_NODE':

@@ -35,10 +35,6 @@ class Nodes {
   }
 
   async getRandomNode() {
-    const
-      index = Math.floor(Math.random() * (this.size() - 0) + 0),
-      key = Object.keys(this.list)[index]
-
     const keys = Object.keys(this.list)
 
     let
@@ -54,17 +50,15 @@ class Nodes {
 
     totalStake += myBalance.stake
 
-    for (const key1 of keys) {
+    for (const key of keys) {
       const
         node = this.list[key1].model || this.list[key1],
         balance = await bc.balance(node.publicKey),
         SPLastIndex = stakePool.length - 1
 
-      console.log(this.list[key1].model ? this.list[key1].model.publicKey : this.list[key1].publicKey)
-
-
       if (balance.stake) {
         stakePool.push({
+          key,
           publicKey: node.publicKey,
           min: stakePool[SPLastIndex].max + 0.0001,
           max: stakePool[SPLastIndex].max + balance.stake
@@ -80,6 +74,7 @@ class Nodes {
 
     for (const stake of stakePool) {
       if (stake.min < rNum && rNum < stake.max) {
+        console.log(key)
         return this.list[key]
       }
     }
