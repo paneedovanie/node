@@ -24,19 +24,20 @@ module.exports = class {
     })
   }
 
-  BLOCK_CREATED(block) {
+  async BLOCK_CREATED(block) {
     nodes.sendAll({
       action: 'ADD_BLOCK',
       data: block
     })
   }
 
-  NEW_CREATOR() {
-    if (!nodes.size())
-      bc.setAsCreator()
-    else
-      nodes.getRandomNode().sendMessage({
-        action: 'SET_AS_CREATOR'
-      })
+  async NEW_CREATOR() {
+    const node = await nodes.getRandomNode()
+
+    if (!node) return bc.setAsCreator()
+
+    node.sendMessage({
+      action: 'SET_AS_CREATOR'
+    })
   }
 }
