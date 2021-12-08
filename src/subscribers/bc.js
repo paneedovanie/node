@@ -17,6 +17,13 @@ module.exports = class {
     })
   }
 
+  ADD_TRANSACTION(data) {
+    nodes.sendAll({
+      action: 'ADD_TRANSACTION',
+      data
+    })
+  }
+
   PAY_CREATOR(data) {
     nodes.sendAll({
       action: 'ADD_TRANSACTION',

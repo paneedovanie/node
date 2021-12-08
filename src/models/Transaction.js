@@ -44,7 +44,7 @@ module.exports = class {
   }
 
   isValid() {
-    if (this.txId !== 0 || !this.from)
+    if (this.txId !== 0 || !this.from || this.from.substr(0, 6) !== 'STAKE:')
       return Encryption.verify(this.signature, this.generateHash(), this.from)
     else
       return this.hash === this.generateHash()

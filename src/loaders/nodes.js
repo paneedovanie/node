@@ -70,8 +70,6 @@ class Nodes {
 
     const rNum = Math.random() * (totalStake - 0.0001) + 0.0001
 
-    console.log(rNum, totalStake, stakePool)
-
     for (const stake of stakePool) {
       if (stake.min < rNum && rNum < stake.max) {
         return this.list[stake.key]

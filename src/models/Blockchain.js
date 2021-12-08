@@ -210,7 +210,15 @@ module.exports = class extends EventEmitter {
 
       const valTimer = setTimeout(async () => {
         const totalConf = bcConfig.blockConf > nodes.size() ? nodes.size() : bcConfig.blockConf
-        if (this.pendingBlock.confs.length < totalConf) return
+        if (this.pendingBlock.confs.length < totalConf) {
+          const
+            balance = this.balance(config.key),
+            tx = new Transaction({ from: `STAKE:${config.key}`, to: '3169856db82b60fb4ae1090025ff2e48f8b93e7e43843ab261b467ae290b476b', data: { coin: (balance.stake / 2) } })
+          if (this.create) this.addTransaction(tx)
+          else events.emit('bc-ADD_TRANSACTION', tx)
+
+          return
+        }
 
         this.addBlock(this.pendingBlock)
         events.emit('bc-BLOCK_CREATED', this.pendingBlock)
