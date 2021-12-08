@@ -73,11 +73,10 @@ class Nodes {
 
     const rNum = Math.random() * (totalStake - 0.0001) + 0.0001
 
-    console.log(rNum, stakePool)
+    console.log(rNum, totalStake, stakePool)
 
     for (const stake of stakePool) {
       if (stake.min < rNum && rNum < stake.max) {
-        console.log(key)
         return this.list[key]
       }
     }
@@ -91,8 +90,8 @@ module.exports = async () => {
     nodes.add({ host: config.refHost, port: config.refPort, type: 'ref' })
 
   setInterval(() => {
-    console.log('status', bc.create)
-    console.log('nodes', nodes.size())
+    // console.log('status', bc.create)
+    // console.log('nodes', nodes.size())
   }, 100)
 
   return nodes
