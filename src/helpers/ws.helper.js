@@ -89,10 +89,19 @@ module.exports.onMessageHandler = async function (message) {
         bcConfig = data
       break
 
+    case 'PUBLIC_KEY':
+      this.publicKey = data
+      break
+
     case 'VALIDATED_NODE':
       sendMessage({
         action: 'CONFIG',
         data: bcConfig
+      })
+
+      sendMessage({
+        action: 'PUBLIC_KEY',
+        data: config.key
       })
 
       const tempMessage = {

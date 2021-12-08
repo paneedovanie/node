@@ -3,8 +3,9 @@ const
   { messageSending, messageReceiving, onMessageHandler } = require('../helpers/ws.helper')
 
 module.exports = class {
-  constructor({ host = null, port = null, type = 'null', model = null }) {
+  constructor({ publicKey = null, host = null, port = null, type = 'null', model = null }) {
     this.type = type
+    this.publicKey = publicKey || model.publicKey
     this.host = host || model.host
     this.port = port || model.port
     this.model = model
