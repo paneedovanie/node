@@ -74,8 +74,7 @@ class Nodes {
 
     for (const stake of stakePool) {
       if (stake.min < rNum && rNum < stake.max) {
-        console.log(key)
-        return this.list[key]
+        return this.list[stake.key]
       }
     }
   }
