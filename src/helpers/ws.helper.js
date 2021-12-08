@@ -37,6 +37,7 @@ module.exports.onMessageHandler = async function (message) {
 
   switch (action) {
     case 'NEW_PEER':
+      this.publicKey = data.publicKey
       this.host = data.host
       this.port = data.port
 

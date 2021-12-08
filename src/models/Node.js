@@ -27,6 +27,7 @@ module.exports = class {
         this.sendMessage({
           action: 'NEW_PEER',
           data: {
+            publicKey: config.key,
             host: config.host,
             port: config.port,
             lastBlock: bc.storageLastBlock

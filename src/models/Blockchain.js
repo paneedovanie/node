@@ -141,6 +141,11 @@ module.exports = class extends EventEmitter {
     return new Transaction({ from, to, data })
   }
 
+  async addStake({ from = null, data = null }) {
+    const to = `STAKE:${from}`
+    return new Transaction({ from, to, data })
+  }
+
   async addTransaction(data, verify = true) {
     let
       transaction = new Transaction(data),
@@ -210,7 +215,7 @@ module.exports = class extends EventEmitter {
         this.addBlock(this.pendingBlock)
         events.emit('bc-BLOCK_CREATED', this.pendingBlock)
 
-        console.log('BLOCK CREATED: Index -', this.pendingBlock.index, '| HASH -', this.pendingBlock.hash.substr(0, 3) + '....')
+        console.log('BLOCK CREATED: Index -', this.pendingBlock.index, '| HASH -', this.pendingBlock.hash.substr(0, 4) + '....')
         this.pendingBlock = null
 
         clearTimeout(valTimer)
@@ -225,7 +230,8 @@ module.exports = class extends EventEmitter {
   balance(publicKey) {
     return new Promise((res, rej) => {
       let balance = {
-        coin: 0
+        coin: 0,
+        stake: 0
       }
 
       if (!fs.existsSync(this.path))
@@ -242,16 +248,20 @@ module.exports = class extends EventEmitter {
           if (!tx.data || publicKey !== tx.from && publicKey !== tx.to)
             continue
 
-          if (tx.data.coin) {
-            if (!balance.coin) balance.coin = 0
-
+          if (tx.from === `STAKE:${publicKey}`) {
+            balance.stake -= (tx.data.coin + tx.fee)
+            balance.coin -= tx.data.coin
+          } else if (tx.to === `STAKE:${publicKey}`) {
+            balance.stake += tx.data.coin
+            balance.coin -= tx.data.coin + tx.fee
+          } else if (tx.data.coin) {
             if (tx.from === publicKey)
-              balance.coin -= tx.data.coin + tx.fee
+              balance.coin -= (tx.data.coin + tx.fee)
             if (tx.to === publicKey)
               balance.coin += tx.data.coin
-
-            balance.coin = precisionRoundMod(balance.coin, bcConfig.decPlace)
           }
+
+          balance.coin = precisionRoundMod(balance.coin, bcConfig.decPlace)
         }
       });
 

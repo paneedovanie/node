@@ -57,4 +57,17 @@ module.exports = (app) => {
         return result
     }, OK)
   })
+
+  app.post(`${suffix}/stake`, async (req, res) => {
+
+    apiResponse(res, async () => {
+
+      const result = await bc.addStake({
+        from: req.body.from,
+        data: req.body.data
+      })
+
+      return result
+    }, ACCEPTED)
+  })
 }

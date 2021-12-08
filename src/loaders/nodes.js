@@ -38,6 +38,12 @@ class Nodes {
     const
       index = Math.floor(Math.random() * (this.size() - 0) + 0),
       key = Object.keys(this.list)[index]
+    const keys = Object.keys(this.list)
+
+    for (const key1 of keys) {
+      const balance = bc.balance(this.list[key1].publicKey)
+      console.log(balance)
+    }
 
     return this.list[key]
   }
