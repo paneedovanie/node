@@ -126,8 +126,9 @@ module.exports = class extends EventEmitter {
     clearTimeout(this.checkForBlock)
 
     this.checkForBlock = setTimeout(() => {
+      console.log('we')
       events.emit('bc-HIGH_AS_CREATOR')
-    }, config.blockTime + config.blockCfTm + 3000)
+    }, bcConfig.blockTime + bcConfig.blockCfTm + 3000)
 
     const
       block = new Block(data),

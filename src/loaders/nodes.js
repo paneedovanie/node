@@ -83,6 +83,31 @@ class Nodes {
   async getHighStakeNode() {
     const keys = Object.keys(this.list)
 
+    const
+      myBalance = await bc.balance(config.key),
+      myStake = myBalance.stake * Math.round((Date.now() - myBalance.stakeTimestamp) / (24 * 60000))
+
+    let highest = {
+      publicKey: config.key,
+      stake: myStake
+    }
+
+    for (const key of keys) {
+      const
+        node = this.list[key].model || this.list[key],
+        balance = await bc.balance(node.publicKey),
+        stake = balance.stake * Math.round((Date.now() - myBalance.stakeTimestamp) / (24 * 60000))
+
+      if (highest.stake < stake) {
+        highest = {
+          key: key,
+          publicKey: node.publicKey,
+          stake: stake
+        }
+      }
+    }
+
+    return this.list[highest.key]
   }
 }
 
