@@ -248,7 +248,7 @@ module.exports = class extends EventEmitter {
       let balance = {
         coin: 0,
         stake: 0,
-        stakeTimestamp: null
+        stakeTimestamp: 0
       }
 
       if (!fs.existsSync(this.path))
@@ -279,7 +279,7 @@ module.exports = class extends EventEmitter {
               balance.coin += tx.data.coin
           }
 
-          if (!balance.stake) balance.stakeTimestamp = null
+          if (!balance.stake) balance.stakeTimestamp = 0
 
           balance.coin = precisionRoundMod(balance.coin, bcConfig.decPlace)
         }

@@ -43,7 +43,7 @@ class Nodes {
 
     const
       myBalance = await bc.balance(config.key),
-      myStake = myBalance.stake * Math.random(Date.now() - myBalance.stakeTimestamp / 60000)
+      myStake = myBalance.stake * Math.round((Date.now() - myBalance.stakeTimestamp) / (24 * 60000))
 
     stakePool.push({
       publicKey: config.key,
@@ -57,26 +57,26 @@ class Nodes {
       const
         node = this.list[key].model || this.list[key],
         balance = await bc.balance(node.publicKey),
+        stake = balance.stake * Math.round((Date.now() - myBalance.stakeTimestamp) / (24 * 60000)),
         SPLastIndex = stakePool.length - 1
 
-      if (balance.stake) {
+      if (stake) {
         stakePool.push({
           key,
           publicKey: node.publicKey,
           min: stakePool[SPLastIndex].max + 0.0001,
-          max: stakePool[SPLastIndex].max + balance.stake
+          max: stakePool[SPLastIndex].max + stake
         })
 
-        totalStake += balance.stake
+        totalStake += stake
       }
     }
 
     const rNum = Math.random() * (totalStake - 0.0001) + 0.0001
 
     for (const stake of stakePool) {
-      if (stake.min < rNum && rNum < stake.max) {
+      if (stake.min < rNum && rNum < stake.max)
         return this.list[stake.key]
-      }
     }
   }
 
