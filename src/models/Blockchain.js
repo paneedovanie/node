@@ -125,6 +125,10 @@ module.exports = class extends EventEmitter {
   async addBlock(data, verify = true) {
     clearTimeout(this.checkForBlock)
 
+    this.checkForBlock = setTimeout(() => {
+      events.emit('bc-HIGH_AS_CREATOR')
+    }, config.blockTime + config.blockCfTm + 3000)
+
     const
       block = new Block(data),
       last = bc.lastBlock()
@@ -137,10 +141,6 @@ module.exports = class extends EventEmitter {
       const strBlock = JSON.stringify(block) + "\n"
       fs.appendFileSync(this.path, strBlock);
     }
-
-    this.checkForBlock = setTimeout(() => {
-      events.emit('bc-HIGH_AS_CREATOR')
-    }, config.blockTime + config.blockCfTm + 3000)
 
     return true
   }
