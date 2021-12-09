@@ -41,14 +41,17 @@ class Nodes {
       stakePool = [],
       totalStake = 0
 
-    const myBalance = await bc.balance(config.key)
+    const
+      myBalance = await bc.balance(config.key),
+      myStake = myBalance.stake * Math.random(Date.now() - myBalance.stakeTimestamp / 60000)
+
     stakePool.push({
       publicKey: config.key,
       min: 0.0001,
-      max: myBalance.stake
+      max: myStake
     })
 
-    totalStake += myBalance.stake
+    totalStake += myStake
 
     for (const key of keys) {
       const
@@ -75,6 +78,11 @@ class Nodes {
         return this.list[stake.key]
       }
     }
+  }
+
+  async getHighStakeNode() {
+    const keys = Object.keys(this.list)
+
   }
 }
 

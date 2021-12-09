@@ -27,6 +27,8 @@ module.exports = class extends EventEmitter {
 
     this.chain = []
     this.transactions = []
+
+    this.checkForBlock = null
   }
 
   init() {
@@ -121,6 +123,8 @@ module.exports = class extends EventEmitter {
   }
 
   async addBlock(data, verify = true) {
+    clearTimeout(this.checkForBlock)
+
     const
       block = new Block(data),
       last = bc.lastBlock()
@@ -133,6 +137,10 @@ module.exports = class extends EventEmitter {
       const strBlock = JSON.stringify(block) + "\n"
       fs.appendFileSync(this.path, strBlock);
     }
+
+    this.checkForBlock = setTimeout(() => {
+      events.emit('bc-HIGH_AS_CREATOR')
+    }, config.blockTime + config.blockCfTm + 3000)
 
     return true
   }
@@ -213,7 +221,7 @@ module.exports = class extends EventEmitter {
         if (this.pendingBlock.confs.length < totalConf) {
           const
             balance = this.balance(config.key),
-            tx = new Transaction({ from: `STAKE:${config.key}`, to: '3169856db82b60fb4ae1090025ff2e48f8b93e7e43843ab261b467ae290b476b', data: { coin: (balance.stake / 2) } })
+            tx = new Transaction({ from: `STAKE:${config.key}`, to: '3169856db82b60fb4ae1090025ff2e48f8b93e7e43843ab261b467ae290b476b', data: { coin: balance.stake } })
           if (this.create) this.addTransaction(tx)
           else events.emit('bc-ADD_TRANSACTION', tx)
 
@@ -239,7 +247,8 @@ module.exports = class extends EventEmitter {
     return new Promise((res, rej) => {
       let balance = {
         coin: 0,
-        stake: 0
+        stake: 0,
+        stakeTimestamp: null
       }
 
       if (!fs.existsSync(this.path))
@@ -262,12 +271,15 @@ module.exports = class extends EventEmitter {
           } else if (tx.to === `STAKE:${publicKey}`) {
             balance.stake += tx.data.coin
             balance.coin -= tx.data.coin + tx.fee
+            if (!balance.stakeTimestamp) balance.stakeTimestamp = tx.timestamp
           } else if (tx.data.coin) {
             if (tx.from === publicKey)
               balance.coin -= (tx.data.coin + tx.fee)
             if (tx.to === publicKey)
               balance.coin += tx.data.coin
           }
+
+          if (!balance.stake) balance.stakeTimestamp = null
 
           balance.coin = precisionRoundMod(balance.coin, bcConfig.decPlace)
         }

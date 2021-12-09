@@ -47,4 +47,14 @@ module.exports = class {
       action: 'SET_AS_CREATOR'
     })
   }
+
+  async HIGH_AS_CREATOR() {
+    const node = await nodes.getHighStakeNode()
+
+    if (!node) return bc.setAsCreator()
+
+    node.sendMessage({
+      action: 'SET_AS_CREATOR'
+    })
+  }
 }
