@@ -57,7 +57,7 @@ class Nodes {
       const
         node = this.list[key].model || this.list[key],
         balance = await bc.balance(node.publicKey),
-        stake = balance.stake * Math.round((Date.now() - myBalance.stakeTimestamp) / (24 * 60000)),
+        stake = balance.stake * Math.round((Date.now() - balance.stakeTimestamp) / (24 * 60000)),
         SPLastIndex = stakePool.length - 1
 
       if (stake) {
@@ -71,6 +71,8 @@ class Nodes {
         totalStake += stake
       }
     }
+
+    console.log(stakePool)
 
     const rNum = Math.random() * (totalStake - 0.0001) + 0.0001
 
