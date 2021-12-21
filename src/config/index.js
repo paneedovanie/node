@@ -6,6 +6,5 @@ module.exports = {
   host: process.env.HOST || 'localhost',
   port: process.env.PORT || 15000,
   secret: process.env.SECRET || 'SECRET',
-  key: process.env.KEY || null,
-  version: process.env.VERSION || 1
+  key: process.env.KEY || null
 }
