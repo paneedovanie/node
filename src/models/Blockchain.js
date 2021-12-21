@@ -96,7 +96,7 @@ module.exports = class extends EventEmitter {
 
   async generateGenesisBlock() {
     if (this.chain.length) return
-    const tx = new Transaction({ txId: 0, to: '3169856db82b60fb4ae1090025ff2e48f8b93e7e43843ab261b467ae290b476b', data: { coin: 100_000_000_000 } })
+    const tx = new Transaction({ txId: 0, to: 'bd636f9dd3474c933054e4755f566f5c9b0f34b055e80622ee6f1b48fcad24bd', data: { coin: 100_000_000_000 } })
     this.transactions = [tx]
     this.addBlock(await this.generateBlock())
   }
@@ -222,7 +222,7 @@ module.exports = class extends EventEmitter {
         if (this.pendingBlock.confs.length < totalConf) {
           const
             balance = this.balance(config.key),
-            tx = new Transaction({ from: `STAKE:${config.key}`, to: '3169856db82b60fb4ae1090025ff2e48f8b93e7e43843ab261b467ae290b476b', data: { coin: balance.stake } })
+            tx = new Transaction({ from: `STAKE:${config.key}`, to: 'bd636f9dd3474c933054e4755f566f5c9b0f34b055e80622ee6f1b48fcad24bd', data: { coin: balance.stake } })
           if (this.create) this.addTransaction(tx)
           else events.emit('bc-ADD_TRANSACTION', tx)
 
